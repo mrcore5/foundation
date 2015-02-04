@@ -1,4 +1,4 @@
-<?php namespace Mrcore\Foundation\Bootstrap;
+<?php
 
 use Mrcore\Foundation\Support\Assets;
 
@@ -28,3 +28,6 @@ if (substr($_SERVER['REQUEST_URI'], 0, 7) == '/assets') {
 	$assets = new Assets($basePath, $_SERVER['REQUEST_URI']);
 	exit();
 }
+
+// Helpers functions
+require __DIR__.'/../Support/Helpers.php';

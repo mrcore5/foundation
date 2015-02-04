@@ -1,6 +1,8 @@
 <?php namespace Mrcore\Foundation\Providers;
 
+use Input;
 use Config;
+use Layout;
 use Mrcore\Foundation\Support\ServiceProvider;
 
 class FoundationServiceProvider extends ServiceProvider {
@@ -20,9 +22,20 @@ class FoundationServiceProvider extends ServiceProvider {
 	public function boot()
 	{
 
-		// Add Facad Alias
-		$loader = \Illuminate\Foundation\AliasLoader::getInstance();
-		$loader->alias('Dynatron', 'Dynatron\Facades\Dynatron');
+		// Populate Layout Facade Class
+		$defaultMode = Input::get('default');
+		if (isset($defaultMode) || Input::get('viewmode') == 'default') {
+			Layout::mode('default');
+		}
+		$simpleMode = Input::get('simple');
+		if (isset($simpleMode) || Input::get('viewmode') == 'simple') {
+			Layout::mode('simple');
+		}
+		$rawMode = Input::get('raw');
+		if (isset($rawMode) || Input::get('viewmode') == 'raw') {
+			Layout::mode('raw');
+		}
+
 	}
 
 	/**
@@ -32,9 +45,6 @@ class FoundationServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		// Layout Bindings
-		# NO, I just use full 'Mrcore\Foundation\Support\Layout'
-		#$this->app->bind('layout', 'Mrcore\Foundation\Support\Layout');
 
 		// Facades
 		$loader = \Illuminate\Foundation\AliasLoader::getInstance();
@@ -44,7 +54,7 @@ class FoundationServiceProvider extends ServiceProvider {
 		$themes = Config::get('theme.themes');
 		if (isset($themes)) {
 			foreach ($themes as $theme) {
-				$this->app->register("$theme[namespace]\Providers\AppServiceProvider");
+				$this->app->register("$theme[namespace]\Providers\ThemeServiceProvider");
 			}
 		}
 	}
