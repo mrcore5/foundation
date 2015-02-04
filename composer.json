@@ -1,9 +1,9 @@
 {
-	"name": "mrcore/modules/foundation",
+	"name": "mrcore/foundation",
 	"type": "library",
-	"description": "Mrcore Foundation Library",
+	"description": "Mrcore Foundation Module",
 	"keywords": ["mrcore", "framework", "laravel"],
-	"homepage": "http://github.com/mreschke/mrcore-foundation",
+	"homepage": "http://github.com/mreschke/mrcore-modules-foundation",
 	"license": "MIT",
 	"support": {
 		"issues": "https://github.com/mreschke/mrcore/issues"

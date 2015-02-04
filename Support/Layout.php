@@ -1,5 +1,7 @@
 <?php namespace Mrcore\Modules\Foundation\Support;
 
+use View;
+
 class Layout {
 
 	private $title;
@@ -33,6 +35,8 @@ class Layout {
 		$this->hideMenubar = true;
 		$this->viewport = '<meta name="viewport" content="width=device-width, initial-scale=1" />';
 		$this->container = true;
+		$this->header_container = true;
+		$this->footer_container = true;
 		$this->bodyAttr = '';
 	}
 
@@ -150,7 +154,6 @@ class Layout {
 			$this->mode = $value;
 			if ($value == 'simple' || $value == 'raw') {
 				$this->hideAll(true);
-				#$this->container(false); #no, leave as is
 			} else {
 				$this->hideAll(false);
 			}
@@ -202,13 +205,14 @@ class Layout {
 		return $this->getSet(__function__, $value);
 	}
 
-	public function container($value = null)
+	public function container($container = true, $headerContainer = true, $footerContainer = true)
 	{
-		// Set container view variable
-		$container = "no-container";
-		if ($value) $container = "container";
-		\View::share('container', $container);
-		return $this->getSet(__function__, $value);
+		$container = ($container ? 'container' : 'no-container');
+		$headerContainer = ($headerContainer ? 'container' : 'no-container');
+		$footerContainer = ($footerContainer ? 'container' : 'no-container');
+		View::share('container', $container);
+		View::share('headerContainer', $headerContainer);
+		View::share('footerContainer', $footerContainer);
 	}
 
 	public function bodyAttr($value = null)
