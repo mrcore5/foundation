@@ -1,4 +1,4 @@
-<?php namespace Mrcore\Foundation\Support;
+<?php namespace Mrcore\Modules\Foundation\Support;
 
 /**
  * Stream assets from multiple locations

@@ -1,6 +1,6 @@
-<?php namespace Mrcore\Foundation\Support;
+<?php namespace Mrcore\Modules\Foundation\Support;
 
-class Layout {#implements LayoutInterface {
+class Layout {
 
 	private $title;
 	private $css;

@@ -1,9 +1,9 @@
 {
-	"name": "mrcore/foundation",
+	"name": "mrcore/modules/foundation",
 	"type": "library",
 	"description": "Mrcore Foundation Library",
 	"keywords": ["mrcore", "framework", "laravel"],
-	"homepage": "http://github.com/mreschke/mrcore",
+	"homepage": "http://github.com/mreschke/mrcore-foundation",
 	"license": "MIT",
 	"support": {
 		"issues": "https://github.com/mreschke/mrcore/issues"
@@ -20,7 +20,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Mrcore\\Foundation\\": ""
+			"Mrcore\\Modules\\Foundation\\": ""
 		}
 	}
 }

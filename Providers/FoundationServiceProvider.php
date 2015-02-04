@@ -1,9 +1,9 @@
-<?php namespace Mrcore\Foundation\Providers;
+<?php namespace Mrcore\Modules\Foundation\Providers;
 
 use Input;
 use Config;
 use Layout;
-use Mrcore\Foundation\Support\ServiceProvider;
+use Mrcore\Modules\Foundation\Support\ServiceProvider;
 
 class FoundationServiceProvider extends ServiceProvider {
 
@@ -48,7 +48,7 @@ class FoundationServiceProvider extends ServiceProvider {
 
 		// Facades
 		$loader = \Illuminate\Foundation\AliasLoader::getInstance();
-		$loader->alias('Layout', 'Mrcore\Foundation\Facades\Layout');
+		$loader->alias('Layout', 'Mrcore\Modules\Foundation\Facades\Layout');
 
 		// Register Themes Here instead of config/app.php because of Support/AssetProvider
 		$themes = Config::get('theme.themes');

@@ -1,10 +1,11 @@
 <?php
 
-use Mrcore\Foundation\Support\Assets;
+use Mrcore\Modules\Foundation\Support\Assets;
 
 //=========================================================================
 // Place this in laravels public/index.php, FIRST THING!
 //=========================================================================
+
 /*
 |--------------------------------------------------------------------------
 | Mrcore Foundation
@@ -16,7 +17,7 @@ use Mrcore\Foundation\Support\Assets;
 */
 
 #$basePath = realpath(__DIR__.'/../');
-#require __DIR__.'/../vendors/mrcore/foundation/Foundation/Bootstrap/Start.php';
+#require __DIR__.'/../vendors/mrcore/modules/foundation/Foundation/Bootstrap/Start.php';
 
 //=========================================================================
 
