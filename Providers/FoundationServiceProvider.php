@@ -22,6 +22,16 @@ class FoundationServiceProvider extends ServiceProvider {
 	public function boot()
 	{
 
+		// Register Themes Here instead of config/app.php because of Support/AssetProvider
+		// This must go in boot() not register() so it happens after all other themes have beein registered
+		// inside your config/app.php so overriding works properly.
+		$themes = Config::get('theme.themes');
+		if (isset($themes)) {
+			foreach ($themes as $theme) {
+				$this->app->register("$theme[namespace]\Providers\ThemeServiceProvider");
+			}
+		}
+
 		// Populate Layout Facade Class
 		$defaultMode = Input::get('default');
 		if (isset($defaultMode) || Input::get('viewmode') == 'default') {
@@ -50,13 +60,6 @@ class FoundationServiceProvider extends ServiceProvider {
 		$loader = \Illuminate\Foundation\AliasLoader::getInstance();
 		$loader->alias('Layout', 'Mrcore\Modules\Foundation\Facades\Layout');
 
-		// Register Themes Here instead of config/app.php because of Support/AssetProvider
-		$themes = Config::get('theme.themes');
-		if (isset($themes)) {
-			foreach ($themes as $theme) {
-				$this->app->register("$theme[namespace]\Providers\ThemeServiceProvider");
-			}
-		}
 	}
 
 }

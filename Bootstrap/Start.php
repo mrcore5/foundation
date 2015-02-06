@@ -17,10 +17,9 @@ use Mrcore\Modules\Foundation\Support\Assets;
 */
 
 #$basePath = realpath(__DIR__.'/../');
-#require __DIR__.'/../vendors/mrcore/modules/foundation/Foundation/Bootstrap/Start.php';
+#require __DIR__.'/../vendor/mrcore/foundation/Bootstrap/Start.php';
 
 //=========================================================================
-
 
 
 // Stream all /assets/* files from the defined theme folders

@@ -18,11 +18,19 @@ class Assets {
 		// Include Laravel Configs
 		$config = require "$basePath/config/theme.php";
 		$themes = $config['themes'];
+		$assets = $config['assets'];
 
 		// Loop themes and create absolute paths url
 		$paths = [];
 		foreach ($themes as $theme) {
 			$paths[] = realpath("$basePath/$theme[path]/Assets");
+		}
+
+		// Append any additional assets defined in config/theme.php
+		if (isset($assets)) {
+			foreach ($assets as $asset) {
+				$paths[] = realpath("$basePath/$asset");
+			}
 		}
 
 		// Always add mrcore public at the end
