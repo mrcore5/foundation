@@ -1,10 +1,5 @@
 <?php namespace Mrcore\Modules\Foundation\Support;
 
-/**
- * Stream assets from multiple locations
- * @copyright 2015 Matthew Reschke
- * @author Matthew Reschke <mail@mreschke.com>
- */
 class Assets {
 
 	public function __construct($basePath, $uri)
@@ -16,25 +11,27 @@ class Assets {
 		$uri = substr($uri, 7); //ex: /css/bootstrap.css
 
 		// Include Laravel Configs
-		$config = require "$basePath/config/theme.php";
-		$themes = $config['themes'];
+		$config = require "$basePath/config/modules.php";
+		$modules = $config['modules'];
 		$assets = $config['assets'];
 
-		// Loop themes and create absolute paths url
+		// Define asset paths
 		$paths = [];
-		foreach ($themes as $theme) {
-			$paths[] = realpath("$basePath/$theme[path]/Assets");
-		}
-
-		// Append any additional assets defined in config/theme.php
-		if (isset($assets)) {
-			foreach ($assets as $asset) {
-				$paths[] = realpath("$basePath/$asset");
-			}
-		}
 
 		// Always add mrcore public at the end
 		$paths[] = realpath("$basePath/public");
+
+		// Add module assets
+		foreach ($assets as $moduleName) {
+			if (isset($modules[$moduleName])) {
+				$module = $modules[$moduleName];
+				if (isset($module['enabled']) && $module['enabled'] == true) {
+					if (isset($module['assets'])) {
+						$paths[] = realpath("$basePath/$module[assets]");
+					}
+				}
+			}
+		}
 
 		// Stream asset
 		$this->streamFile($uri, $paths);
@@ -51,12 +48,12 @@ class Assets {
 	{
 		// Use first file found in $paths array
 		foreach ($paths as $path) {
-			$file = $path.$uri;
+			$file = $path.$uri;			
 			if (file_exists($file) && !is_dir($file)) {
 
 				// Asset file found in $path
 				$filename = pathinfo($file)['basename'];
-				$ext = $filename = strtolower(pathinfo($file)['extension']);
+				$ext = strtolower(pathinfo($file)['extension']);
 				$mimetype = $this->mimetype($file);
 
 				if ($ext == 'php') $this->notFound();
@@ -70,18 +67,20 @@ class Assets {
 				// Checking if the client is validating his cache and if it is current.
 				if (isset($headers['If-Modified-Since']) && (strtoupper($headers['If-Modified-Since']) == strtoupper(gmdate('D, d M Y H:i:s', filemtime($file)).' GMT'))) {
 					// Client's cache IS current, so we just respond '304 Not Modified'.
-					header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($file)).' GMT', true, 304);
+					$this->notModified();
+
 				} else {
 					// Image not cached or cache outdated, we respond '200 OK' and output the image.
 					header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($file)).' GMT', true, 200);
 				}
-				header("Cache-control: public"); //required for If-Modified-Since header to exist from browser
+				#this control doesn't seem to matter
+				#header("Cache-control: public"); //required for If-Modified-Since header to exist from browser
 				
 				// Trick PHP into thinking this page is done, so it unlocks the session file to allow for further site navigation and downloading
 				session_write_close();
 
 				// Return file content
-				readfile($file);
+				readfile($file); // reads directly to output buffer, faster than file_get_contents which reads into variable first
 				exit();
 
 			}
@@ -90,15 +89,6 @@ class Assets {
 
 		// 404 Not Found
 		$this->notFound();
-	}
-
-	/**
-	 * Set 404 not found headers and exit
-	 */
-	private function notFound()
-	{
-		header("HTTP/1.0 404 Not Found");
-		exit();		
 	}
 
 	/**
@@ -126,4 +116,21 @@ class Assets {
 		return $mimetype;
 	}	
 
+	/**
+	 * Set 304 Not Modified header and exit
+	 */
+	private function notModified()
+	{
+		header('HTTP/1.1 304 Not Modified');
+		exit();
+	}
+
+	/**
+	 * Set 404 Not Found header and exit
+	 */
+	private function notFound()
+	{
+		header("HTTP/1.0 404 Not Found");
+		exit();		
+	}
 }
