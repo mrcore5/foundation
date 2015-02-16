@@ -30,13 +30,6 @@ class FoundationServiceProvider extends ServiceProvider {
 		// Load our custom macros
 		require __DIR__.'/../Support/Macros.php';
 
-		// Load all modules views, routes and theme information
-		Module::loadAutoloaders();
-		Module::loadViews();
-		Module::loadRoutes();
-		Module::configureThemes();
-		dd(Module::trace());
-
 		// Configure layout modes
 		$simpleMode = Input::get('simple');
 		if (isset($simpleMode) || Input::get('viewmode') == 'simple') {
@@ -64,6 +57,9 @@ class FoundationServiceProvider extends ServiceProvider {
 		$loader = \Illuminate\Foundation\AliasLoader::getInstance();
 		$loader->alias('Module', 'Mrcore\Modules\Foundation\Facades\Module');
 		$loader->alias('Layout', 'Mrcore\Modules\Foundation\Facades\Layout');
+
+		// Register UrlServiceProvider for https ssl termination Support
+		$this->app->register('Mrcore\Modules\Foundation\Providers\UrlServiceProvider');
 
 		// Mrcore Module Tracking
 		Module::trace(get_class(), __function__);

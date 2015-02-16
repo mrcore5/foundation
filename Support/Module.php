@@ -15,7 +15,7 @@ class Module {
 		$this->modules = array();
 		$allModules = Config::get('modules.modules');
 		foreach ($allModules as $name => $module) {
-			if (isset($module['enabled']) && $module['enabled'] == true) {
+			if (!isset($module['enabled']) || $module['enabled'] == true) {
 				$module['name'] = $name;
 				$this->modules[$name] = $module;
 			}
@@ -60,6 +60,16 @@ class Module {
 	}
 
 	/**
+	 * Add module to the modules array (dynamic at run-time)
+	 * @param array $module
+	 */
+	public function addModule($name, $module)
+	{
+		$this->modules[$name] = $module;
+		$this->modules[$name]['name'] = $name;
+	}
+
+	/**
 	 * Get all modules assets, full path, in proper order
 	 * @return array
 	 */
@@ -96,10 +106,16 @@ class Module {
 		if (isset($name)) {
 			// Register a single module
 			$module = $this->find($name);
+
+			// Load autoloader first so I can find the service provider namespace
+			$this->loadAutoloaders($module['name']);
+
 			if (isset($module)) {
 				if ($module['type'] != 'foundation') {
 					// Register this modules service provider
-					App::register($module['provider']);
+					if (isset($module['provider'])) {
+						App::register($module['provider']);
+					}
 				}
 			}			
 		} else {
@@ -150,7 +166,11 @@ class Module {
 				if ($path = realpath(base_path().'/'.$module['views'])) {
 					// Load this modules views
 					$this->trace($path);
-					View::addLocation($path);
+					if (isset($module['view_prefix'])) {
+						View::addNamespace($module['view_prefix'], $path);
+					} else {
+						View::addLocation($path);	
+					}
 				}
 			}			
 		} else {
@@ -175,7 +195,8 @@ class Module {
 				if ($path = realpath(base_path().'/'.$module['routes'])) {
 					// Load this modules routes
 					$this->trace($path);
-					Route::group(['namespace' => $module['controller_namespace']], function($router) use($path) {
+					$prefix = (isset($module['route_prefix']) ? $module['route_prefix'] : '');
+					Route::group(['namespace' => $module['controller_namespace'], 'prefix' => $prefix], function($router) use($path) {
 						require $path;
 					});
 				}

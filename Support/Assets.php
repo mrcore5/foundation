@@ -53,6 +53,7 @@ class Assets {
 
 				// Asset file found in $path
 				$filename = pathinfo($file)['basename'];
+				$size = filesize($file);
 				$ext = strtolower(pathinfo($file)['extension']);
 				$mimetype = $this->mimetype($file);
 
@@ -76,6 +77,8 @@ class Assets {
 				#this control doesn't seem to matter
 				#header("Cache-control: public"); //required for If-Modified-Since header to exist from browser
 				
+				header("Content-length: $size");
+
 				// Trick PHP into thinking this page is done, so it unlocks the session file to allow for further site navigation and downloading
 				session_write_close();
 
