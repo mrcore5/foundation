@@ -5,6 +5,7 @@ use Input;
 use Config;
 use Layout;
 use Module;
+use Illuminate\Foundation\AliasLoader;
 use Mrcore\Modules\Foundation\Support\ServiceProvider;
 
 class FoundationServiceProvider extends ServiceProvider {
@@ -53,12 +54,12 @@ class FoundationServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		// Register Foundation Facades
-		$loader = \Illuminate\Foundation\AliasLoader::getInstance();
-		$loader->alias('Module', 'Mrcore\Modules\Foundation\Facades\Module');
-		$loader->alias('Layout', 'Mrcore\Modules\Foundation\Facades\Layout');
+		// Register Facades
+		$facade = AliasLoader::getInstance();		
+		$facade->alias('Module', 'Mrcore\Modules\Foundation\Facades\Module');
+		$facade->alias('Layout', 'Mrcore\Modules\Foundation\Facades\Layout');
 
-		// Register UrlServiceProvider for https ssl termination Support
+		// Register UrlServiceProvider (laravel override) for mreschke https ssl termination fix
 		$this->app->register('Mrcore\Modules\Foundation\Providers\UrlServiceProvider');
 
 		// Mrcore Module Tracking

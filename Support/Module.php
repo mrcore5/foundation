@@ -60,13 +60,17 @@ class Module {
 	}
 
 	/**
-	 * Add module to the modules array (dynamic at run-time)
+	 * Add module to the modules array (dynamic at run-time) and register it!
 	 * @param array $module
 	 */
 	public function addModule($name, $module)
 	{
+		// Add to array
 		$this->modules[$name] = $module;
 		$this->modules[$name]['name'] = $name;
+
+		// Register new dynamically added module!
+		$this->register($name);
 	}
 
 	/**
