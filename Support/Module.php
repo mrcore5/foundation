@@ -1,6 +1,7 @@
 <?php namespace Mrcore\Modules\Foundation\Support;
 
 use App;
+use URL;
 use View;
 use Config;
 use Route;
@@ -203,6 +204,9 @@ class Module {
 					Route::group(['namespace' => $module['controller_namespace'], 'prefix' => $prefix], function($router) use($path) {
 						require $path;
 					});
+
+					// Register the root controller namespace with the URL generator
+					URL::setRootControllerNamespace($module['controller_namespace']);
 				}
 			}			
 		} else {

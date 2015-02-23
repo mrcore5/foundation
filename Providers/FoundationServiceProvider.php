@@ -67,6 +67,7 @@ class FoundationServiceProvider extends ServiceProvider {
 
 		// Register all enabled mrcore modules
 		$modules = Module::register();
+
 	}
 
 }
