@@ -205,8 +205,10 @@ class Module {
 						require $path;
 					});
 
-					// Register the root controller namespace with the URL generator
-					URL::setRootControllerNamespace($module['controller_namespace']);
+					// Register the root controller namespace with the URL generator only for %apps%
+					if ($name == "%app%") {
+						URL::setRootControllerNamespace($module['controller_namespace']);
+					}
 				}
 			}			
 		} else {
