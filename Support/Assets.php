@@ -33,7 +33,7 @@ class Assets {
 			$assets = $config['assets'];
 
 			// Always add mrcore public at the end
-			$paths[] = realpath("$basePath/public");
+			if ($path = realpath("$basePath/public")) $paths[] = $path;
 
 			// Add module assets
 			foreach ($assets as $moduleName) {

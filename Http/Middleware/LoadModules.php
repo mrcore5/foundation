@@ -20,7 +20,6 @@ class LoadModules {
 
 		Module::loadViews();
 		Module::loadRoutes();
-		Module::configureThemes();
 
 		#dd(Module::trace());		
 

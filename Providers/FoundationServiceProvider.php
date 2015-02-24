@@ -65,6 +65,9 @@ class FoundationServiceProvider extends ServiceProvider {
 		// Mrcore Module Tracking
 		Module::trace(get_class(), __function__);
 
+		// Configure Layout (this must be here, not in boot, not in middleware)
+		Module::configureThemes();		
+
 		// Register all enabled mrcore modules
 		$modules = Module::register();
 
