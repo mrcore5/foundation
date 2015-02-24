@@ -62,7 +62,8 @@ class Assets {
 	 */
 	private function studly($value)
 	{
-		return ucwords(str_replace(array('-', '_'), ' ', $value));
+		$value = ucwords(str_replace(array('-', '_'), ' ', $value));
+		return str_replace(' ', '', $value);
 	}
 
 	/**

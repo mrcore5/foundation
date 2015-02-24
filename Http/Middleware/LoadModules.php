@@ -14,14 +14,10 @@ class LoadModules {
 	 */
 	public function handle($request, Closure $next)
 	{
-		// Load all modules views, routes and theme information
-		// NOTE: autloaders already loaded from Module::register()
-		#dd(Module::all());
-
+		// Load all modules views and routes
+		// NOTE: autloaders have already beed loaded from Module::register() in FoundationServiceProvider
 		Module::loadViews();
 		Module::loadRoutes();
-
-		#dd(Module::trace());		
 
 		// Next middleware
 		return $next($request);
