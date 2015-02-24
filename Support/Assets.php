@@ -9,33 +9,60 @@ class Assets {
 
 		// Remove leading /assets
 		$uri = substr($uri, 7); //ex: /css/bootstrap.css
-
-		// Include Laravel Configs
-		$config = require "$basePath/config/modules.php";
-		$modules = $config['modules'];
-		$assets = $config['assets'];
+		$segments = explode("/", $uri);
 
 		// Define asset paths
 		$paths = [];
 
-		// Always add mrcore public at the end
-		$paths[] = realpath("$basePath/public");
 
-		// Add module assets
-		foreach ($assets as $moduleName) {
-			if (isset($modules[$moduleName])) {
-				$module = $modules[$moduleName];
-				if (isset($module['enabled']) && $module['enabled'] == true) {
-					if (isset($module['assets'])) {
-						$paths[] = realpath("$basePath/$module[assets]");
+		if (substr($uri, 0, 4) == '/app') {
+			// Load css from an mrcore application
+			if (count($segments) >= 4) {
+				$vendor = $segments[2];
+				$package = $segments[3];
+				$uri = substr($uri, strpos($uri, "$vendor/$package") + strlen("$vendor/$package"));
+				if ($path = realpath("$basePath/../Apps/".$this->studly($vendor)."/".$this->studly($package)."/Assets")) {
+					$paths[] = $path;
+				}
+			}
+
+		} else {
+			// Load css from module assets
+			$config = require "$basePath/config/modules.php";
+			$modules = $config['modules'];
+			$assets = $config['assets'];
+
+			// Always add mrcore public at the end
+			$paths[] = realpath("$basePath/public");
+
+			// Add module assets
+			foreach ($assets as $moduleName) {
+				if (isset($modules[$moduleName])) {
+					$module = $modules[$moduleName];
+					if (isset($module['enabled']) && $module['enabled'] == true) {
+						if (isset($module['assets'])) {
+							$paths[] = realpath("$basePath/$module[assets]");
+						}
 					}
 				}
 			}
 		}
 
 		// Stream asset
-		$this->streamFile($uri, $paths);
+		if (count($paths) > 0) {
+			$this->streamFile($uri, $paths);
+		}
 
+	}
+
+	/**
+	 * Convert a value to studly caps case
+	 * @param  string $value
+	 * @return string 
+	 */
+	private function studly($value)
+	{
+		return ucwords(str_replace(array('-', '_'), ' ', $value));
 	}
 
 	/**
