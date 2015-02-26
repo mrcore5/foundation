@@ -112,17 +112,20 @@ class Module {
 			// Register a single module
 			$module = $this->find($name);
 
-			// Load autoloader first so I can find the service provider namespace
-			$this->loadAutoloaders($module['name']);
+			$consoleOnly = isset($module['console_only']) ? $module['console_only'] : false;
+			if (!$consoleOnly || ($consoleOnly && App::runningInConsole())) {
+				// Load autoloader first so I can find the service provider namespace
+				$this->loadAutoloaders($module['name']);
 
-			if (isset($module)) {
-				if ($module['type'] != 'foundation') {
-					// Register this modules service provider
-					if (isset($module['provider'])) {
-						App::register($module['provider']);
+				if (isset($module)) {
+					if ($module['type'] != 'foundation') {
+						// Register this modules service provider
+						if (isset($module['provider'])) {
+							App::register($module['provider']);
+						}
 					}
-				}
-			}			
+				}			
+			}
 		} else {
 			// Register all modules
 			$modules = $this->all();
@@ -206,7 +209,7 @@ class Module {
 					});
 
 					// Register the root controller namespace with the URL generator only for %apps%
-					if ($name == "%app%") {
+					if ($module['type'] == "app") {
 						URL::setRootControllerNamespace($module['controller_namespace']);
 					}
 				}
