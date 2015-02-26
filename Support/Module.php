@@ -104,16 +104,17 @@ class Module {
 	/**
 	 * Register one or all modules service provider
 	 * @param  string $name = null
+	 * @param  boolean $force will load module even if console_only
 	 * @return void
 	 */
-	public function register($name = null)
+	public function register($name = null, $force = false)
 	{
 		if (isset($name)) {
 			// Register a single module
 			$module = $this->find($name);
 
 			$consoleOnly = isset($module['console_only']) ? $module['console_only'] : false;
-			if (!$consoleOnly || ($consoleOnly && App::runningInConsole())) {
+			if ($force || !$consoleOnly || ($consoleOnly && App::runningInConsole())) {
 				// Load autoloader first so I can find the service provider namespace
 				$this->loadAutoloaders($module['name']);
 
