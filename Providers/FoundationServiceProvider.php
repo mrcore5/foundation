@@ -44,7 +44,6 @@ class FoundationServiceProvider extends ServiceProvider {
 		if (isset($defaultMode) || Input::get('viewmode') == 'default') {
 			Layout::mode('default');
 		}
-
 	}
 
 	/**
