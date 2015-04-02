@@ -1,5 +1,6 @@
 <?php namespace Mrcore\Modules\Foundation\Providers;
 
+use App;
 use View;
 use Input;
 use Config;
@@ -43,6 +44,17 @@ class FoundationServiceProvider extends ServiceProvider {
 		$defaultMode = Input::get('default');
 		if (isset($defaultMode) || Input::get('viewmode') == 'default') {
 			Layout::mode('default');
+		}
+
+		if (App::runningInConsole()) {
+			// We are running in the console (artisan, testing or queue worders)
+			// The console does NOT use HTTP middleware which is where my
+			// Module system calls loadViews() and loadRoutes().  We don't really
+			// need routes for console apps, but we DO need the views registered
+			// in case any console app or worker needs access to module views like
+			// for sending emails.  So do it here only if console, else it will
+			// load as usual in Foundation/Http/Middleware/LoadModules.php!
+			Module::loadViews();
 		}
 	}
 
