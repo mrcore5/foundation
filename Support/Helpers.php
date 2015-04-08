@@ -19,7 +19,7 @@ if ( ! function_exists('asset'))
 	}
 }
 
-if ( ! function_exists('dump'))
+/*if ( ! function_exists('dump'))
 {
 	function dump($data)
 	{
@@ -62,7 +62,8 @@ if ( ! function_exists('vdd'))
 {
 	function vdd($data)
 	{
+		echo "<pre>";
 		var_dump($data);
 		die;
 	}
-}
+}*/
