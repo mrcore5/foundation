@@ -32,6 +32,10 @@ class FoundationServiceProvider extends ServiceProvider {
 		// Load our custom macros
 		require __DIR__.'/../Support/Macros.php';
 
+		// Register Middleware (in boot() to be last, not register())
+		$kernel = $this->app->make('Illuminate\Contracts\Http\Kernel');
+		$kernel->pushMiddleware('Mrcore\Modules\Foundation\Http\Middleware\LoadModules');
+
 		// Configure layout modes
 		$simpleMode = Input::get('simple');
 		if (isset($simpleMode) || Input::get('viewmode') == 'simple') {
