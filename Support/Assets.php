@@ -41,7 +41,7 @@ class Assets {
 					$module = $modules[$moduleName];
 					if (isset($module['enabled']) && $module['enabled'] == true) {
 						if (isset($module['assets'])) {
-							$paths[] = realpath("$basePath/$module[assets]");
+							$paths[] = realpath("$basePath/$module[path]/$module[assets]");
 						}
 					}
 				}

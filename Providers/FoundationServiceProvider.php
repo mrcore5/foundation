@@ -29,6 +29,9 @@ class FoundationServiceProvider extends ServiceProvider {
 		// Mrcore Module Tracking
 		Module::trace(get_class(), __function__);
 
+		// Define publishing rules
+		$this->definePublishing();		
+
 		// Load our custom macros
 		require __DIR__.'/../Support/Macros.php';
 
@@ -85,6 +88,34 @@ class FoundationServiceProvider extends ServiceProvider {
 
 		// Register all enabled mrcore modules
 		$modules = Module::register();
+
+	}
+
+	/**
+	 * Define publishing rules
+	 * 
+	 * @return void
+	 */
+	private function definePublishing()
+	{
+		# App base path
+		$path = realpath(__DIR__.'/../');
+
+		// Merge config
+		// Notice, do NOT merge modules.php, must publish this one and override the whole file
+		$this->mergeConfigFrom("$path/Config/foundation.php", 'mrcore.foundation');
+
+		// Foundation Config publishing rules
+		// ./artisan vendor:publish --tag="mrcore.foundation.configs"
+		$this->publishes([
+			"$path/Config/foundation.php" => base_path('config/mrcore/foundation.php'),
+		], 'mrcore.foundation.configs');
+
+		// Modules Config publishing rules
+		// ./artisan vendor:publish --tag="mrcore.modules.configs"
+		$this->publishes([
+			"$path/Config/modules.php" => base_path('config/mrcore/modules.php'),
+		], 'mrcore.modules.configs');		
 
 	}
 

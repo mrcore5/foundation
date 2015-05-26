@@ -172,7 +172,7 @@ class Module {
 			// Load views from a single module
 			$module = $this->find($name);
 			if (isset($module) && isset($module['views'])) {
-				if ($path = realpath(base_path().'/'.$module['views'])) {
+				if ($path = $this->getPath($module['name'], 'views')) {
 					// Load this modules views
 					$this->trace($path);
 					if (isset($module['view_prefix'])) {
@@ -201,7 +201,7 @@ class Module {
 			// Load routes from a single module
 			$module = $this->find($name);
 			if (isset($module) && isset($module['routes'])) {
-				if ($path = realpath(base_path().'/'.$module['routes'])) {
+				if ($path = $this->getPath($name, 'routes')) {
 					// Load this modules routes
 					$this->trace($path);
 					$prefix = (isset($module['route_prefix']) ? $module['route_prefix'] : '');
@@ -286,6 +286,20 @@ class Module {
 	}
 
 	/**
+	 * Resolve real path for a single module and item
+	 * @param  string $name
+	 * @param  string $item
+	 * @return string|boolean
+	 */
+	private function getPath($name, $item)
+	{
+		$module = $this->find($name);
+		if (isset($module)) {
+			return realpath(base_path($module['path'].'/'.$module[$item]));
+		}
+	}
+
+	/**
 	 * Resolve real paths for an item in proper order
 	 * @param  string $item
 	 * @return array
@@ -297,7 +311,7 @@ class Module {
 			$module = $this->find($moduleName);
 			if (isset($module)) {
 				if (isset($module[$item])) {
-					if ($path = realpath(base_path().'/'.$module[$item])) {
+					if ($path = $this->getPath($moduleName, $item)) {
 						$paths[] = $path;
 					}
 				}
