@@ -152,8 +152,8 @@ return [
 	'routes' => [
 		'%app%',
 		'Auth',
-		'Wiki',
 		'Foundation',
+		'Wiki',
 	],
 
 	/*
