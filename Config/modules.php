@@ -28,6 +28,7 @@ return [
 			'controller_namespace' => 'Mrcore\Modules\Foundation\Http\Controllers',
 			'provider' => 'Mrcore\Modules\Foundation\Providers\FoundationServiceProvider',
 			'path' => 'vendor/mrcore/foundation',
+			'routes' => 'Http/routes.php',
 		],
 
 		// Bootswatch Themes
@@ -50,9 +51,10 @@ return [
 				'body' => true,
 				'footer' => true,
 			],
+			'enabled' => false,
 		],
 
-		/*'SubTheme' => [
+		'SubTheme' => [
 			'type' => 'subtheme',
 			'namespace' => 'Mrcore\Themes\Example',
 			'controller_namespace' => null,
@@ -67,32 +69,24 @@ return [
 				'css/bootstrap/slate.min.css',
 				'css/bootstrap/override/example.css',
 			],
-			'enabled' => true,
-		],*/
+			'enabled' => false,
+		],
 
 		'Mreschke\Helpers' => [
 			'type' => 'module',
 			'namespace' => 'Mreschke\Helpers',
 			'path' => 'vendor/mreschke/helpers',
+			'enabled' => false,
 		],
 
-		/*'Mreschke\Dbal' => [
+		'Mreschke\Dbal' => [
 			'type' => 'module',
 			'namespace' => 'Mreschke\Dbal',
 			'provider' => 'Mreschke\Dbal\Providers\DbalServiceProvider',
 			'path' => 'vendor/mreschke/dbal',
 			'console_only' => false,
-			'enabled' => true,
+			'enabled' => false,
 		],
-
-		'Mreschke\Render' => [
-			'type' => 'module',
-			'namespace' => 'Mreschke\Render',
-			'provider' => 'Mreschke\Render\Providers\RenderServiceProvider',
-			'path' => 'vendor/mreschke/render',
-			'console_only' => false,
-			'enabled' => true,
-		],*/
 
 	],
 

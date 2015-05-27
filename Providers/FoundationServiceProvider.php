@@ -89,6 +89,9 @@ class FoundationServiceProvider extends ServiceProvider {
 		// Register all enabled mrcore modules
 		$modules = Module::register();
 
+		// Register our Artisan Commands
+		$this->commands('Mrcore\Modules\Foundation\Console\Commands\InstallCommand');		
+
 	}
 
 	/**
@@ -114,7 +117,7 @@ class FoundationServiceProvider extends ServiceProvider {
 		// Modules Config publishing rules
 		// ./artisan vendor:publish --tag="mrcore.modules.configs"
 		$this->publishes([
-			"$path/Config/modules.php" => base_path('config/mrcore/modules.php'),
+			"$path/Config/modules.php" => base_path('config/modules.php'),
 		], 'mrcore.modules.configs');		
 
 	}

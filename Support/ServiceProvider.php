@@ -6,5 +6,3 @@ use Config;
 abstract class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
 }
-
-

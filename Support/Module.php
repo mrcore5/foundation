@@ -15,10 +15,12 @@ class Module {
 		// Add only enabled modules
 		$this->modules = array();
 		$allModules = Config::get('modules.modules');
-		foreach ($allModules as $name => $module) {
-			if (!isset($module['enabled']) || $module['enabled'] == true) {
-				$module['name'] = $name;
-				$this->modules[$name] = $module;
+		if (isset($allModules)) {
+			foreach ($allModules as $name => $module) {
+				if (!isset($module['enabled']) || $module['enabled'] == true) {
+					$module['name'] = $name;
+					$this->modules[$name] = $module;
+				}
 			}
 		}
 	}
@@ -129,9 +131,10 @@ class Module {
 			}
 		} else {
 			// Register all modules
-			$modules = $this->all();
-			foreach ($modules as $module) {
-				$this->register($module['name']); //recursion
+			if ($modules = $this->all()) {
+				foreach ($modules as $module) {
+					$this->register($module['name']); //recursion
+				}
 			}
 		}
 	}
@@ -155,8 +158,10 @@ class Module {
 			}
 		} else {
 			// Load autoloader from all modules
-			foreach ($this->all() as $module) {
-				$this->loadAutoloaders($module['name']); //recursion
+			if ($modules = $this->all()) {
+				foreach ($modules as $module) {
+					$this->loadAutoloaders($module['name']); //recursion
+				}
 			}
 		}
 	}
@@ -184,8 +189,10 @@ class Module {
 			}			
 		} else {
 			// Load views from all modules, in proper order
-			foreach (Config::get("modules.views") as $moduleName) {
-				$this->loadViews($moduleName); //recursion
+			if ($views = Config::get("modules.views")) {
+				foreach ($views as $view) {
+					$this->loadViews($view); //recursion
+				}
 			}
 		}
 	}
@@ -217,8 +224,10 @@ class Module {
 			}			
 		} else {
 			// Load routes from all modules
-			foreach (Config::get("modules.routes") as $moduleName) {
-				$this->loadRoutes($moduleName); //recursion
+			if ($routes = Config::get("modules.routes")) {
+				foreach ($routes as $moduleName) {
+					$this->loadRoutes($moduleName); //recursion
+				}
 			}
 		}
 	}
@@ -230,6 +239,7 @@ class Module {
 	public function configureThemes()
 	{
 		// Get theme module css and bootstrap container configurations
+		$baseThemeCss = [];	$subThemeCss = [];
 		$modules = $this->all();
 		foreach ($modules as $module) {
 			if ($module['type'] == 'basetheme') {
@@ -250,9 +260,11 @@ class Module {
 		}
 
 		// Set theme bootstrap containers
-		Layout::container(
-			$container['body'], $container['header'], $container['footer']
-		);
+		if (isset($container)) {
+			Layout::container(
+				$container['body'], $container['header'], $container['footer']
+			);
+		}
 	}
 
 	/**
