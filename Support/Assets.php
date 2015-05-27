@@ -14,7 +14,6 @@ class Assets {
 		// Define asset paths
 		$paths = [];
 
-
 		if (substr($uri, 0, 4) == '/app') {
 			// Load css from an mrcore application
 			if (count($segments) >= 4) {
@@ -39,7 +38,7 @@ class Assets {
 			foreach ($assets as $moduleName) {
 				if (isset($modules[$moduleName])) {
 					$module = $modules[$moduleName];
-					if (isset($module['enabled']) && $module['enabled'] == true) {
+					if (!isset($module['enabled']) || $module['enabled'] == true) {
 						if (isset($module['assets'])) {
 							$paths[] = realpath("$basePath/$module[path]/$module[assets]");
 						}

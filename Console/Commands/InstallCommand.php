@@ -48,7 +48,7 @@ class InstallCommand extends Command {
 		if (str_contains($contents, "Mrcore Foundation")) {
 			// Already installed asset manager
 			$this->error("Foundation has already been installed!");
-			#exit();
+			exit();
 		}
 
 		// Install Asset Manager
@@ -72,7 +72,7 @@ class InstallCommand extends Command {
 \$basePath = realpath(__DIR__.'/../');
 require __DIR__.'$path';
 ", $contents);
-		#file_put_contents($index, $contents);
+		file_put_contents($index, $contents);
 
 		// Publish Modules config
 		$this->info("* Publishing Modles config");
@@ -83,8 +83,16 @@ require __DIR__.'$path';
 		$routes = base_path('app/Http/routes.php');
 		$routesOriginal = base_path('app/Http/routes_original.php');
 		if (file_exists($routes) && !file_exists($routesOriginal)) {
-			exec("mv $routes ".base_path('app/Http/routes_original.php'));
+			exec("mv $routes $routesOriginal");
 			file_put_contents($routes, "<?php // Made by mrcore/foundation. Original moved to routes_original.php");
+		}
+
+		// Removing views
+		$this->info("* Removing laravels views (renamed to views_original");
+		$views = base_path('resources/views');
+		$viewsOriginal = base_path('resources/views_original');
+		if (file_exists($views) && !file_exists($viewsOriginal)) {
+			exec("mv $views $viewsOriginal");
 		}
 
 		// Done

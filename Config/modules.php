@@ -31,6 +31,34 @@ return [
 			'routes' => 'Http/routes.php',
 		],
 
+		'Auth' =>  [
+			'type' => 'module',
+			'namespace' => 'Mrcore\Modules\Auth',
+			'controller_namespace' => 'Mrcore\Modules\Auth\Http\Controllers',
+			'provider' => 'Mrcore\Modules\Auth\Providers\AuthServiceProvider',
+			'path' => 'vendor/mrcore/auth',
+			'routes' => 'Http/routes.php',
+			'route_prefix' => null,
+			'views' => 'Views',
+			'view_prefix' => null,
+			'assets' => 'Assets',
+			'enabled' => false,
+		],
+
+		'Wiki' => [
+			'type' => 'module',
+			'namespace' => 'Mrcore\Modules\Wiki',
+			'controller_namespace' => 'Mrcore\Modules\Wiki\Http\Controllers',
+			'provider' => 'Mrcore\Modules\Wiki\Providers\WikiServiceProvider',
+			'path' => 'vendor/mrcore/wiki',
+			'routes' => 'Http/routes.php',
+			'route_prefix' => null,
+			'views' => 'Views',
+			'view_prefix' => null,
+			'assets' => 'Assets',
+			'enabled' => false,
+		],		
+
 		// Bootswatch Themes
 		// default cerulean cosmo cyborg darkly flatly journal lumen paper
 		// readable sandstone simplex slate spacelab superhero united yeti

@@ -239,7 +239,7 @@ class Module {
 	public function configureThemes()
 	{
 		// Get theme module css and bootstrap container configurations
-		$baseThemeCss = [];	$subThemeCss = [];
+		$baseThemeCss = $subThemeCss = null;
 		$modules = $this->all();
 		foreach ($modules as $module) {
 			if ($module['type'] == 'basetheme') {
