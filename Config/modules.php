@@ -28,13 +28,6 @@ return [
 			'controller_namespace' => 'Mrcore\Modules\Foundation\Http\Controllers',
 			'provider' => 'Mrcore\Modules\Foundation\Providers\FoundationServiceProvider',
 			'path' => 'vendor/mrcore/foundation',
-			'routes' => 'Http/routes.php',
-			'route_prefix' => null,
-			'views' => null,
-			'view_prefix' => null,
-			'assets' => null,
-			'console_only' => false,
-			'enabled' => true,
 		],
 
 		// Bootswatch Themes
@@ -57,8 +50,6 @@ return [
 				'body' => true,
 				'footer' => true,
 			],
-			'console_only' => false,
-			'enabled' => true,
 		],
 
 		/*'SubTheme' => [
@@ -76,7 +67,6 @@ return [
 				'css/bootstrap/slate.min.css',
 				'css/bootstrap/override/example.css',
 			],
-			'console_only' => false,
 			'enabled' => true,
 		],*/
 
@@ -84,8 +74,6 @@ return [
 			'type' => 'module',
 			'namespace' => 'Mreschke\Helpers',
 			'path' => 'vendor/mreschke/helpers',
-			'console_only' => false,
-			'enabled' => true,
 		],
 
 		/*'Mreschke\Dbal' => [
