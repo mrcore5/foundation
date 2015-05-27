@@ -255,8 +255,10 @@ class Module {
 		// Add theme css
 		$css = $baseThemeCss;
 		if (isset($subThemeCss)) $css = $subThemeCss; //subtheme wins
-		foreach ($css as $style) {
-			Layout::css($style);
+		if (isset($css)) {
+			foreach ($css as $style) {
+				Layout::css($style);
+			}
 		}
 
 		// Set theme bootstrap containers
