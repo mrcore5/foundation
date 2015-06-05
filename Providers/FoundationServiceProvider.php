@@ -83,6 +83,9 @@ class FoundationServiceProvider extends ServiceProvider {
 		// Mrcore Module Tracking
 		Module::trace(get_class(), __function__);
 
+		// Merge config
+		$this->mergeConfigFrom(__DIR__.'/../Config/foundation.php', 'mrcore.foundation');
+
 		// Configure Layout (this must be here, not in boot, not in middleware)
 		Module::configureThemes();		
 
@@ -103,10 +106,6 @@ class FoundationServiceProvider extends ServiceProvider {
 	{
 		# App base path
 		$path = realpath(__DIR__.'/../');
-
-		// Merge config
-		// Notice, do NOT merge modules.php, must publish this one and override the whole file
-		$this->mergeConfigFrom("$path/Config/foundation.php", 'mrcore.foundation');
 
 		// Foundation Config publishing rules
 		// ./artisan vendor:publish --tag="mrcore.foundation.configs"

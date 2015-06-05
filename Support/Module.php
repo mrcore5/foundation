@@ -225,6 +225,8 @@ class Module {
 		} else {
 			// Load routes from all modules
 			if ($routes = Config::get("modules.routes")) {
+				// Routes are reversed, last one wins because its a require statement
+				$routes = array_reverse($routes);				
 				foreach ($routes as $moduleName) {
 					$this->loadRoutes($moduleName); //recursion
 				}
