@@ -20,9 +20,12 @@ class Assets {
 				$vendor = $segments[2];
 				$package = $segments[3];
 				$uri = substr($uri, strpos($uri, "$vendor/$package") + strlen("$vendor/$package"));
-				if ($path = realpath("$basePath/../Apps/".$this->studly($vendor)."/".$this->studly($package)."/Assets")) {
-					$paths[] = $path;
+
+				// Check for app in ../Apps first for dev override, then vendor
+				if (!$path = realpath("$basePath/../Apps/".$this->studly($vendor)."/".$this->studly($package)."/Assets")) {
+					$path = realpath("$basePath/vendor/$vendor/$package/Assets");
 				}
+				if ($path) $paths[] = $path;
 			}
 
 		} else {
@@ -40,7 +43,16 @@ class Assets {
 					$module = $modules[$moduleName];
 					if (!isset($module['enabled']) || $module['enabled'] == true) {
 						if (isset($module['assets'])) {
-							$paths[] = realpath("$basePath/$module[path]/$module[assets]");
+							// Can have multiple paths, first one wins
+							$modulePaths = is_array($module['path']) ? $module['path'] : [$module['path']];
+							foreach ($modulePaths as $path) {
+								if (substr($path, 0, 1) != '/') $path = "$basePath/$path"; // relatove to absolute
+								$path = "$path/$module[assets]";
+								if ($path = realpath($path)) {
+									$paths[] = $path;
+									break;
+								}
+							}
 						}
 					}
 				}
@@ -57,7 +69,7 @@ class Assets {
 	/**
 	 * Convert a value to studly caps case
 	 * @param  string $value
-	 * @return string 
+	 * @return string
 	 */
 	private function studly($value)
 	{
@@ -75,7 +87,7 @@ class Assets {
 	{
 		// Use first file found in $paths array
 		foreach ($paths as $path) {
-			$file = $path.$uri;			
+			$file = $path.$uri;
 			if (file_exists($file) && !is_dir($file)) {
 
 				// Asset file found in $path
@@ -103,7 +115,7 @@ class Assets {
 				}
 				#this control doesn't seem to matter
 				#header("Cache-control: public"); //required for If-Modified-Since header to exist from browser
-				
+
 				header("Content-length: $size");
 
 				// Trick PHP into thinking this page is done, so it unlocks the session file to allow for further site navigation and downloading
@@ -144,7 +156,7 @@ class Assets {
 		}
 
 		return $mimetype;
-	}	
+	}
 
 	/**
 	 * Set 304 Not Modified header and exit
@@ -161,6 +173,6 @@ class Assets {
 	private function notFound()
 	{
 		header("HTTP/1.0 404 Not Found");
-		exit();		
+		exit();
 	}
 }

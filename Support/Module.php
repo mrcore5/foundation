@@ -127,7 +127,7 @@ class Module {
 							App::register($module['provider']);
 						}
 					}
-				}			
+				}
 			}
 		} else {
 			// Register all modules
@@ -150,7 +150,7 @@ class Module {
 			// Load autoloader from a single module
 			$module = $this->find($name);
 			if (isset($module)) {
-				if ($path = realpath(base_path().'/'.$module['path'].'/vendor/autoload.php')) {
+				if ($path = realpath($this->getPath($name).'/vendor/autoload.php')) {
 					// Load this modules autoload.php file
 					$this->trace($path);
 					require $path;
@@ -183,10 +183,10 @@ class Module {
 					if (isset($module['view_prefix'])) {
 						View::addNamespace($module['view_prefix'], $path);
 					} else {
-						View::addLocation($path);	
+						View::addLocation($path);
 					}
 				}
-			}			
+			}
 		} else {
 			// Load views from all modules, in proper order
 			if ($views = Config::get("modules.views")) {
@@ -221,12 +221,12 @@ class Module {
 						URL::setRootControllerNamespace($module['controller_namespace']);
 					}
 				}
-			}			
+			}
 		} else {
 			// Load routes from all modules
 			if ($routes = Config::get("modules.routes")) {
 				// Routes are reversed, last one wins because its a require statement
-				$routes = array_reverse($routes);				
+				$routes = array_reverse($routes);
 				foreach ($routes as $moduleName) {
 					$this->loadRoutes($moduleName); //recursion
 				}
@@ -247,7 +247,7 @@ class Module {
 			if ($module['type'] == 'basetheme') {
 				$baseThemeCss = $module['css'];
 				$container = $module['container'];
-			
+
 			} elseif ($module['type'] == 'subtheme') {
 				$subThemeCss = $module['css'];
 
@@ -292,9 +292,9 @@ class Module {
 				} else {
 					$dump[] = "$class";
 				}
-				
+
 				$this->app['modules.dump'] = $dump;
-			}			
+			}
 
 		} else {
 			return $this->app['modules.dump'];
@@ -304,14 +304,26 @@ class Module {
 	/**
 	 * Resolve real path for a single module and item
 	 * @param  string $name
-	 * @param  string $item
+	 * @param  string $item = null
 	 * @return string|boolean
 	 */
-	private function getPath($name, $item)
+	private function getPath($name, $item = null)
 	{
 		$module = $this->find($name);
 		if (isset($module)) {
-			return realpath(base_path($module['path'].'/'.$module[$item]));
+			$paths = is_array($module['path']) ? $module['path'] : [$module['path']];
+
+			// Path can be an array of paths (../Apps, ../vendor...) first one found wins
+			foreach ($paths as $path) {
+				if (substr($path, 0, 1) != '/') $path = base_path($path); // relatove to absolute
+				if ($path = realpath($path)) {
+					break;
+				}
+			}
+
+			// Append module item to path
+			if ($path && isset($item)) $path = realpath($path."/".$module[$item]);
+			return $path;
 		}
 	}
 
@@ -333,7 +345,7 @@ class Module {
 				}
 			}
 		}
-		return $paths;		
+		return $paths;
 	}
 
 }
