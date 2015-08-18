@@ -73,7 +73,10 @@ return [
 			'views' => 'Views',
 			'view_prefix' => null,
 			'assets' => 'Assets',
-			'css' => ['css/bootstrap/simplex.min.css'],
+			'css' => [
+				'css/bootstrap/simplex.min.css',
+				'css/bootstrap/override/theme-simplex.css',
+			],
 			'container' => [
 				'header' => true,
 				'body' => true,
