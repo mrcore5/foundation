@@ -307,7 +307,7 @@ class Module {
 	 * @param  string $item = null
 	 * @return string|boolean
 	 */
-	private function getPath($name, $item = null)
+	public function getPath($name, $item = null)
 	{
 		$module = $this->find($name);
 		if (isset($module)) {
