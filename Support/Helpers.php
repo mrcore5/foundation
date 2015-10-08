@@ -19,6 +19,102 @@ if ( ! function_exists('asset'))
 	}
 }
 
+if ( ! function_exists('dumpt'))
+{
+	/**
+	 * Dump the passed variables table style
+	 * @return void
+	 */
+	function dumpt()
+	{
+		// Dump simple data
+		$dump = function($data) {
+			dump($data);
+		};
+
+		// Dump complex array
+		$dumpArray = function($data) {
+			if (!isset($data)) return;
+			if (empty($data)) return;
+			$data = json_decode(json_encode($data), true);
+			$i = 0;
+			foreach ($data as $row) {
+				foreach ($row as $key => $value) {
+					$found = false;
+					if (is_array($value)) {
+						if (!is_array(head($value))) {
+							// Subeneity is single level
+							$found = true;
+							foreach ($value as $subkey => $subvalue) {
+								if (is_array($subvalue)) {
+									$data[$i][$key] = '--Complex--';
+								} else {
+									$data[$i][$key.'.'.$subkey] = $subvalue;
+								}
+							}
+						} else {
+							// Cannot handle multi level subeneity, only 1-1
+							$data[$i][$key] = '--Complex--';
+						}
+					}
+					if ($found) unset($data[$i][$key]);
+				}
+				$i ++;
+			}
+
+			// Build table output
+			$headers = array_keys(head($data));
+			$table = new Table(new ConsoleOutput);
+			$table->setHeaders($headers)->setRows($data);
+			$table->render();
+			echo count($data)." Rows\n\n";
+		};
+
+		$args = func_get_args();
+		foreach ($args as $items) {
+			if (isset($items)) {
+
+				if (is_numeric($items) || is_string($items)) {
+					// Basic strings and numbers
+					$dump($items);
+
+				} elseif ($items instanceof Collection) {
+					$dumpArray($items->flatten()->toArray());
+
+				} elseif (is_array($items)) {
+					if (is_array(head($items))) {
+						$dumpArray($items);
+
+					} else {
+						// Simple single level array (can be single assoc too)
+						$dump($items);
+					}
+
+				} elseif (is_object($items)) {
+					// Single object
+					dump($items);
+				}
+			}
+		}
+	}
+}
+
+if ( ! function_exists('ddt'))
+{
+	/**
+	 * Dump the passed variables table style and die
+	 * @return void
+	 */
+	function ddt()
+	{
+		array_map(function($items) {
+			dumpt($items);
+		}, func_get_args());
+		exit();
+	}
+}
+
+
 /*if ( ! function_exists('dump'))
 {
 	function dump($data)
