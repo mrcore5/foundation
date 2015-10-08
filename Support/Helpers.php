@@ -1,5 +1,6 @@
 <?php
 
+use Mreschke\Helpers\Other;
 use Illuminate\Support\Collection;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -41,30 +42,7 @@ if ( ! function_exists('dumpt'))
 			if (!isset($data)) return;
 			if (empty($data)) return;
 			$data = json_decode(json_encode($data), true);
-			$i = 0;
-			foreach ($data as $row) {
-				foreach ($row as $key => $value) {
-					$found = false;
-					if (is_array($value)) {
-						if (!is_array(head($value))) {
-							// Subeneity is single level
-							$found = true;
-							foreach ($value as $subkey => $subvalue) {
-								if (is_array($subvalue)) {
-									$data[$i][$key] = '--Complex--';
-								} else {
-									$data[$i][$key.'.'.$subkey] = $subvalue;
-								}
-							}
-						} else {
-							// Cannot handle multi level subeneity, only 1-1
-							$data[$i][$key] = '--Complex--';
-						}
-					}
-					if ($found) unset($data[$i][$key]);
-				}
-				$i ++;
-			}
+			$data = Other::collapse($data);
 
 			// Build table output
 			$headers = array_keys(head($data));
