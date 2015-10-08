@@ -1,5 +1,9 @@
 <?php
 
+use Illuminate\Support\Collection;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Output\ConsoleOutput;
+
 // This file is registered first thing from Mrcore\Foundation\Bootstrap\Start
 // So we can override any Laravel Foundation/helpers.php or Support/helpers.php functions
 

@@ -30,7 +30,7 @@ class FoundationServiceProvider extends ServiceProvider {
 		Module::trace(get_class(), __function__);
 
 		// Define publishing rules
-		$this->definePublishing();		
+		$this->definePublishing();
 
 		// Load our custom macros
 		require __DIR__.'/../Support/Macros.php';
@@ -72,8 +72,12 @@ class FoundationServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
+		// Include dynatron helper functions ONLY if from console as its already
+		// fired up from index.php if from http
+		if (App::runningInConsole()) include __DIR__.'/../Support/Helpers.php';
+
 		// Register Facades
-		$facade = AliasLoader::getInstance();		
+		$facade = AliasLoader::getInstance();
 		$facade->alias('Module', 'Mrcore\Modules\Foundation\Facades\Module');
 		$facade->alias('Layout', 'Mrcore\Modules\Foundation\Facades\Layout');
 
@@ -87,19 +91,19 @@ class FoundationServiceProvider extends ServiceProvider {
 		$this->mergeConfigFrom(__DIR__.'/../Config/foundation.php', 'mrcore.foundation');
 
 		// Configure Layout (this must be here, not in boot, not in middleware)
-		Module::configureThemes();		
+		Module::configureThemes();
 
 		// Register all enabled mrcore modules
 		$modules = Module::register();
 
 		// Register our Artisan Commands
-		$this->commands('Mrcore\Modules\Foundation\Console\Commands\InstallCommand');		
+		$this->commands('Mrcore\Modules\Foundation\Console\Commands\InstallCommand');
 
 	}
 
 	/**
 	 * Define publishing rules
-	 * 
+	 *
 	 * @return void
 	 */
 	private function definePublishing()
@@ -117,7 +121,7 @@ class FoundationServiceProvider extends ServiceProvider {
 		// ./artisan vendor:publish --tag="mrcore.modules.configs"
 		$this->publishes([
 			"$path/Config/modules.php" => base_path('config/modules.php'),
-		], 'mrcore.modules.configs');		
+		], 'mrcore.modules.configs');
 
 	}
 
