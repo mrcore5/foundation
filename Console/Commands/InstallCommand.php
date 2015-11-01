@@ -51,29 +51,6 @@ class InstallCommand extends Command {
 			exit();
 		}
 
-		// Install Asset Manager
-		$this->info("* Installing Asset Manager to public/index.php");
-		if (file_exists(base_path('../Modules/Foundation/Bootstrap/Start.php'))) {
-			$path = '/../../Modules/Foundation/Bootstrap/Start.php';
-		} else {
-			$path = '/../vendor/mrcore/foundation/Bootstrap/Start.php';
-		}
-		$contents = str_replace("<?php", "<?php
-/*
-|--------------------------------------------------------------------------
-| Mrcore Foundation
-|--------------------------------------------------------------------------
-|
-| Fire up the mrcore foundation to allow asset handling
-| and other foundation support bootstraping.
-|
-*/
-
-\$basePath = realpath(__DIR__.'/../');
-require __DIR__.'$path';
-", $contents);
-		file_put_contents($index, $contents);
-
 		// Publish Modules config
 		$this->info("* Publishing Modles config");
 		Artisan::call('vendor:publish', ['--tag' => 'mrcore.modules.configs']);
@@ -94,6 +71,28 @@ require __DIR__.'$path';
 		if (file_exists($views) && !file_exists($viewsOriginal)) {
 			exec("mv $views $viewsOriginal");
 		}
+
+		// Install Asset Manager
+		$this->info("* Installing Asset Manager to public/index.php");
+		$contents = str_replace("<?php", "<?php
+
+/*
+|--------------------------------------------------------------------------
+| Mrcore Foundation
+|--------------------------------------------------------------------------
+|
+| Fire up the mrcore foundation to allow asset handling
+| and other foundation support bootstraping.
+|
+*/
+
+\$basePath = realpath(__DIR__.'/../');
+if (file_exists(__DIR__.'/../vendor/foundation/Bootstrap/Start.php')) {
+	require __DIR__.'/../vendor/foundation/Bootstrap/Start.php' ;
+} else {
+	require __DIR__.'/../../Modules/Foundation/Bootstrap/Start.php';
+}", $contents);
+		file_put_contents($index, $contents);
 
 		// Done
 		$this->info('Installation complete!');
