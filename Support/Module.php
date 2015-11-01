@@ -1,5 +1,5 @@
 <?php namespace Mrcore\Modules\Foundation\Support;
-####
+
 use App;
 use URL;
 use View;
