@@ -87,8 +87,8 @@ class InstallCommand extends Command {
 */
 
 \$basePath = realpath(__DIR__.'/../');
-if (file_exists(__DIR__.'/../vendor/foundation/Bootstrap/Start.php')) {
-	require __DIR__.'/../vendor/foundation/Bootstrap/Start.php' ;
+if (file_exists(__DIR__.'/../vendor/mrcore/foundation/Bootstrap/Start.php')) {
+	require __DIR__.'/../vendor/mrcore/foundation/Bootstrap/Start.php' ;
 } else {
 	require __DIR__.'/../../Modules/Foundation/Bootstrap/Start.php';
 }", $contents);
@@ -97,5 +97,5 @@ if (file_exists(__DIR__.'/../vendor/foundation/Bootstrap/Start.php')) {
 		// Done
 		$this->info('Installation complete!');
 	}
-	
+
 }
