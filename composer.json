@@ -1,6 +1,6 @@
 {
 	"name": "mrcore/foundation",
-	"type": "laravel-library",
+	"type": "library",
 	"description": "Mrcore Foundation Module",
 	"keywords": ["mrcore", "framework", "laravel"],
 	"homepage": "http://github.com/mreschke/mrcore-modules-foundation",
@@ -15,9 +15,6 @@
 			"homepage": "http://mreschke.com"
 		}
 	],
-	"require": {
-	    "composer/installers": "~1.0"
-    },
 	"autoload": {
 		"psr-4": {
 			"Mrcore\\Modules\\Foundation\\": ""
