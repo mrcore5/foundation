@@ -1,6 +1,6 @@
 {
 	"name": "mrcore/foundation",
-	"type": "library",
+	"type": "laravel-library",
 	"description": "Mrcore Foundation Module",
 	"keywords": ["mrcore", "framework", "laravel"],
 	"homepage": "http://github.com/mreschke/mrcore-modules-foundation",
