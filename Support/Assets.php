@@ -100,12 +100,13 @@ class Assets {
 
 				// Inline Stream with caching
 				// Uses file modified date to refresh cache, so you always get a new file if modified!
-				$headers = apache_request_headers(); //works fine on nginx too!
 				header("Content-type: $mimetype");
 				header("Content-Disposition: inline; filename=\"$filename\"");
 
 				// Checking if the client is validating his cache and if it is current.
-				if (isset($headers['If-Modified-Since']) && (strtoupper($headers['If-Modified-Since']) == strtoupper(gmdate('D, d M Y H:i:s', filemtime($file)).' GMT'))) {
+				$expires = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? strtoupper($_SERVER['HTTP_IF_MODIFIED_SINCE']) : 'now'; //FRI, 22 MAY 2015 19:02:08 GMT
+				$fileModified = strtoupper(gmdate('D, d M Y H:i:s', filemtime($file)).' GMT');                                 //FRI, 22 MAY 2015 19:02:08 GMT
+				if ($expires == $fileModified) {
 					// Client's cache IS current, so we just respond '304 Not Modified'.
 					$this->notModified();
 
