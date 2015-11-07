@@ -53,9 +53,9 @@ class InstallCommand extends Command {
 
 		// Publish Modules config
 		$this->info("* Publishing Modles config");
-		Artisan::call('vendor:publish', ['--tag' => 'mrcore.modules.configs']);
+        passthru('php artisan vendor:publish --tag mrcore.modules.configs');
 
-		// Removing main routes.php
+        // Removing main routes.php
 		$this->info("* Removing laravels routes.php (renamed to routes_original.php)");
 		$routes = base_path('app/Http/routes.php');
 		$routesOriginal = base_path('app/Http/routes_original.php');
