@@ -1,6 +1,7 @@
 ## Mrcore Foundation Module
 
-This is an mRcore module that provides the main core or foundation functionality.
+This is an mRcore module that provides the foundation of mrcore itself.
+The foundation provides the asset manager and advanced module/app system.
 
 Essentially, this is what turns Laravel into mRcore!
 
