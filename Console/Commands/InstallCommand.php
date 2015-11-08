@@ -56,28 +56,38 @@ class InstallCommand extends Command {
         passthru('php artisan vendor:publish --tag mrcore.modules.configs');
 
         // Removing main routes.php
-		$this->info("* Removing laravels routes.php (renamed to routes_original.php)");
+		$this->info("* Removing laravels routes.php");
 		$routes = base_path('app/Http/routes.php');
-		$routesOriginal = base_path('app/Http/routes_original.php');
-		if (file_exists($routes) && !file_exists($routesOriginal)) {
-			exec("mv $routes $routesOriginal");
-			file_put_contents($routes, "<?php // Made by mrcore/foundation. Original moved to routes_original.php");
+		if (file_exists($routes)) {
+			exec("rm -rf $routes");
+			file_put_contents($routes, "<?php // Emptied by mrcore/foundation installer");
 		}
 
 		// Removing views
-		$this->info("* Removing laravels views (renamed to views_original)");
+		$this->info("* Removing laravels views");
 		$views = base_path('resources/views');
-		$viewsOriginal = base_path('resources/views_original');
-		if (file_exists($views) && !file_exists($viewsOriginal)) {
-			exec("mv $views $viewsOriginal");
+		if (file_exists($views)) {
+			exec("rm -rf $views");
 		}
 
         // Removing migrations
-		$this->info("* Removing laravels migrations (renamed to views_original)");
+		$this->info("* Removing laravels migrations");
 		$migrations = base_path('database/migrations');
 		if (file_exists($migrations)) {
 			exec("rm -rf $migrations");
 		}
+
+		// Removing User model
+		$this->info("* Removing user model");
+		$model = base_path('app/User.php');
+		if (file_exists($model)) {
+			exec("rm -rf $model");
+		}
+
+		// Whoops Errors
+		// Never did this, but if you install whoops, then use the
+		// Handler.php stub in this Commands/InstallStubs/Exceptions/Handler.php
+		// you can get whopps back perfectly.
 
 		// Install Asset Manager
 		$this->info("* Installing Asset Manager to public/index.php");
