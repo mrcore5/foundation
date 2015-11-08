@@ -52,7 +52,7 @@ class InstallCommand extends Command {
 		}
 
 		// Publish Modules config
-		$this->info("* Publishing Modles config");
+		$this->info("* Publishing Modules config");
         passthru('php artisan vendor:publish --tag mrcore.modules.configs');
 
         // Removing main routes.php
