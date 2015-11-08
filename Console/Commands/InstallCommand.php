@@ -65,11 +65,19 @@ class InstallCommand extends Command {
 		}
 
 		// Removing views
-		$this->info("* Removing laravels views (renamed to views_original");
+		$this->info("* Removing laravels views (renamed to views_original)");
 		$views = base_path('resources/views');
 		$viewsOriginal = base_path('resources/views_original');
 		if (file_exists($views) && !file_exists($viewsOriginal)) {
 			exec("mv $views $viewsOriginal");
+		}
+
+        // Removing migrations
+		$this->info("* Removing laravels migrations (renamed to views_original)");
+		$migrations = base_path('database/migrations');
+		$migrationsOriginal = base_path('database/migrations_origina');
+		if (file_exists($migrations) && !file_exists($migrationsOriginal)) {
+			exec("mv $migrations $migrationsOriginal");
 		}
 
 		// Install Asset Manager
