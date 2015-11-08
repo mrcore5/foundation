@@ -1,4 +1,4 @@
-## Mrcore Foundation Module
+## Mrcore Foundation
 
 This is an mRcore module that provides the foundation of mrcore itself.
 
