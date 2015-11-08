@@ -75,7 +75,7 @@ return [
 			'assets' => 'Assets',
 			'css' => [
 				'css/bootstrap/simplex.min.css',
-				#'css/bootstrap/override/theme-simplex.css',
+				'css/bootstrap/override/theme-simplex.css',
 			],
 			'container' => [
 				'header' => true,
