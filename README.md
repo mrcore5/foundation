@@ -1,7 +1,8 @@
 ## Mrcore Foundation Module
 
 This is an mRcore module that provides the foundation of mrcore itself.
-The foundation provides the asset manager and advanced module/app system.
+
+The foundation provides the asset manager and advanced module and dynamic app loading system for Laravel or Lumen.
 
 Essentially, this is what turns Laravel into mRcore!
 
