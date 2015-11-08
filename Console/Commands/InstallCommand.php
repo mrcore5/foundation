@@ -75,9 +75,8 @@ class InstallCommand extends Command {
         // Removing migrations
 		$this->info("* Removing laravels migrations (renamed to views_original)");
 		$migrations = base_path('database/migrations');
-		$migrationsOriginal = base_path('database/migrations_origina');
-		if (file_exists($migrations) && !file_exists($migrationsOriginal)) {
-			exec("mv $migrations $migrationsOriginal");
+		if (file_exists($migrations)) {
+			exec("rm -rf $migrations");
 		}
 
 		// Install Asset Manager
