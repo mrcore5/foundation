@@ -1,0 +1,58 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "44506a31e188d376392b321d6c8be184",
+    "content-hash": "eed7958e20ecf05e88bdfeb5115da7b8",
+    "packages": [
+        {
+            "name": "mreschke/helpers",
+            "version": "1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mreschke/mreschke-helpers.git",
+                "reference": "5ba7cb862ff2abfee492b90408136b39f563b0de"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mreschke/mreschke-helpers/zipball/5ba7cb862ff2abfee492b90408136b39f563b0de",
+                "reference": "5ba7cb862ff2abfee492b90408136b39f563b0de",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mreschke\\Helpers\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matthew Reschke",
+                    "email": "mail@mreschke.com",
+                    "homepage": "http://mreschke.com"
+                }
+            ],
+            "description": "Mreschke Helpers",
+            "homepage": "http://github.com/mreschke/mreschke-helpers",
+            "keywords": [
+                "helpers",
+                "mreschke"
+            ],
+            "time": "2015-10-23 19:48:48"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}
