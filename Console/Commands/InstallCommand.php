@@ -53,9 +53,9 @@ class InstallCommand extends Command {
 
 		// Publish Modules config
 		$this->info("* Publishing Modules config");
-        passthru('php artisan vendor:publish --tag mrcore.modules.configs');
+		passthru('php artisan vendor:publish --tag mrcore.modules.configs');
 
-        // Removing main routes.php
+		// Removing main routes.php
 		$this->info("* Removing laravels routes.php");
 		$routes = base_path('app/Http/routes.php');
 		if (file_exists($routes)) {
@@ -70,7 +70,7 @@ class InstallCommand extends Command {
 			exec("rm -rf $views");
 		}
 
-        // Removing migrations
+		// Removing migrations
 		$this->info("* Removing laravels migrations");
 		$migrations = base_path('database/migrations');
 		if (file_exists($migrations)) {

@@ -32,18 +32,6 @@ class Migrations extends Command
 		$this->signature = $this->signature.'
 			{action : migrate, seed, reseed, rollback, refresh}
 		';
-
-		$this->connection = array_merge(
-			['name' => $this->connection],
-			Config::get('database.connections.'.$this->connection)
-		);
-
-		foreach ($this->path as $path) {
-			if (file_exists(base_path($path))) {
-				$this->path = $path;
-				break;
-			}
-		}
 		parent::__construct();
 	}
 
@@ -56,7 +44,24 @@ class Migrations extends Command
 	{
 		$method = $this->argument('action');
 		if (method_exists($this, $method)) {
+
+			if (!Config::has('database.connections.'.$this->connection)) {
+				throw new Exception("Connection $this->connection does not exists");
+			}
+			$this->connection = array_merge(
+				['name' => $this->connection],
+				Config::get('database.connections.'.$this->connection)
+			);
+
+			foreach ($this->path as $path) {
+				if (file_exists(base_path($path))) {
+					$this->path = $path;
+					break;
+				}
+			}
+
 			$this->$method();
+
 		} else {
 			$this->error("$method() method not found");
 		}
