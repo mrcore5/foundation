@@ -67,7 +67,7 @@ class AppCommand extends Command
 					$this->path = realpath(base_path($path));
 
 					// Execute method
-					$this->$handleMethod($action);
+					$this->$handleMethod($section, $action);
 				}
 			}
 		} else {
@@ -77,11 +77,12 @@ class AppCommand extends Command
 
 	/**
 	 * Handle db commands
+	 * @param  string $section
 	 * @param  string $action
 	 */
-	protected function handleDbCommands($action)
+	protected function handleDbCommands($section, $action)
 	{
-		$method = "db".studly_case($action);
+		$method = $section.studly_case($action);
 		if (method_exists($this, $method)) {
 
 			if (!Config::has('database.connections.'.$this->connection)) {
@@ -93,19 +94,45 @@ class AppCommand extends Command
 			);
 
 			$this->$method();
+		} else {
+			throw new InvalidArgumentException("Argument $section:$action not found");
 		}
 	}
 
 	/**
 	 * Handle make commands
+	 * @param  string $section
 	 * @param  string $action
 	 */
-	protected function handleMakeCommands($action)
+	protected function handleMakeCommands($section, $action)
 	{
 		// Name must be unique accross ALL apps since migrations have no namespace
-		$method = "make".studly_case($action);
+		$method = $section.studly_case($action);
 		if (method_exists($this, $method)) {
 			$this->$method();
+		} else {
+			throw new InvalidArgumentException("Argument $section:$action not found");
+		}
+	}
+
+	/**
+	 * Handle test commands
+	 * @param  string $section
+	 * @param  string $action
+	 */
+	protected function handleTestCommands($section, $action)
+	{
+		// Name must be unique accross ALL apps since migrations have no namespace
+		$method = $section.studly_case($action);
+		if (str_contains($method, "testPlay")) {
+			// Can be test:play or test:play-custom
+			$this->testPlay($action);
+		} else {
+			if (method_exists($this, $method)) {
+				$this->$method();
+			} else {
+				throw new InvalidArgumentException("Argument $section:$action not found");
+			}
 		}
 	}
 
@@ -239,38 +266,72 @@ class AppCommand extends Command
 	}
 
 	/**
+	 * Run phpunit tests
+	 */
+	protected function testRun()
+	{
+		$params = $this->argument('parameters');
+		if (count($params) == 1) {
+			// Adding a filter`
+			$filter = "--filter=$params[0]";
+		}
+		passthru("cd ".base_path()." && phpunit $filter $this->path/Tests/");
+	}
+
+	/**
+	 * Run phpunit test play sandbox
+	 * @param  string $action = 'play'
+	 */
+	protected function testPlay($action = 'play')
+	{
+		$params = implode(' ', $this->argument('parameters'));
+		passthru("cd ".base_path()." && phpunit $this->path/Tests/ $action $params");
+	}
+
+	/**
 	 * Display usage and examples
 	 */
 	protected function usage()
 	{
 		echo "Mrcore app/module helper command usage and examples
 
+As a helper, create yourself a /usr/local/bin/myapp script like so
+	/var/www/mrcore5/System/artisan dynatron:vfi:\$1 \"\${@:2}\"
+
 Database Helper Commands
 -----------------------
 Migrate a database (will NOT create the database if not exist)
-  ./artisan vendor:myapp:app db:migrate
+  myapp app db:migrate
 
 Seed database tables
-  ./artisan vendor:myapp:app db:seed
+  myapp app db:seed
 
 Rollback, Migrate, Seed database (refresh + seed)
-  ./artisan vendor:myapp:app db:reseed
+  myapp app db:reseed
 
 Rollback last migration
-  ./artisan vendor:myapp:app db:rollback
+  myapp app db:rollback
 
 Rollback, Migrate (no seed)
-  ./artisan vendor:myapp:app db:refresh
+  myapp app db:refresh
 
 
 Maker Helper Commands
 ---------------------
 Migration file creation
-  ./artisan vendor:myapp:app make:migration create users
-  ./artisan vendor:myapp:app make:migration update users votes
+  myapp app make:migration create users
+  myapp app make:migration update users votes
 
 Console command creation
-  ./artisan vendor:myapp:app make:console NewCommand
+  myapp app make:console NewCommand
+
+
+Testing Helper commands
+-----------------------
+  myapp app test:run
+  myapp app test:run FileFilter
+  myapp app test:play
+  myapp app test:play-custom
 ";
 	}
 
