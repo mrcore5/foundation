@@ -1,4 +1,4 @@
-<?php namespace Mrcore\Modules\Foundation\Support;
+<?php namespace Mrcore\Foundation\Support;
 
 use View;
 
@@ -217,7 +217,7 @@ class Layout {
 
 	public function bodyAttr($value = null)
 	{
-		return $this->getSet(__function__, $value);	
+		return $this->getSet(__function__, $value);
 	}
 
 	public function getSet($key, $value = null)

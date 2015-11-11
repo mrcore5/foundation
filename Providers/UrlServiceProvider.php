@@ -1,7 +1,7 @@
-<?php namespace Mrcore\Modules\Foundation\Providers;
+<?php namespace Mrcore\Foundation\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Mrcore\Modules\Foundation\Support\UrlGenerator;
+use Mrcore\Foundation\Support\UrlGenerator;
 
 /**
  * Provides laravel URL overrides
@@ -24,7 +24,7 @@ class UrlServiceProvider extends ServiceProvider
 	public function register()
 	{
 		// Override Laravels UrlGenerator with my own
-		// Original UrlGenerator class is found in 
+		// Original UrlGenerator class is found in
 		// vendor/laravel/framework/src/Illuminate/Routing/UrlGenerator.php
 		// And the original service is registered in
 		// vendor/laravel/framework/src/Illuminate/Routing/RoutingServiceProvider.php
@@ -48,7 +48,7 @@ class UrlServiceProvider extends ServiceProvider
 			}));
 		});
 
-	}	
+	}
 
 	/**
 	 * Bootstrap the application events.

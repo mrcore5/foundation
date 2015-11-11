@@ -24,18 +24,18 @@ return [
 
 		'Foundation' => [
 			'type' => 'foundation',
-			'namespace' => 'Mrcore\Modules\Foundation',
-			'controller_namespace' => 'Mrcore\Modules\Foundation\Http\Controllers',
-			'provider' => 'Mrcore\Modules\Foundation\Providers\FoundationServiceProvider',
+			'namespace' => 'Mrcore\Foundation',
+			'controller_namespace' => 'Mrcore\Foundation\Http\Controllers',
+			'provider' => 'Mrcore\Foundation\Providers\FoundationServiceProvider',
 			'path' => ['vendor/mrcore/foundation', '../Modules/Foundation'],
 			'routes' => 'Http/routes.php',
 		],
 
 		'Auth' =>  [
 			'type' => 'module',
-			'namespace' => 'Mrcore\Modules\Auth',
-			'controller_namespace' => 'Mrcore\Modules\Auth\Http\Controllers',
-			'provider' => 'Mrcore\Modules\Auth\Providers\AuthServiceProvider',
+			'namespace' => 'Mrcore\Auth',
+			'controller_namespace' => 'Mrcore\Auth\Http\Controllers',
+			'provider' => 'Mrcore\Auth\Providers\AuthServiceProvider',
 			'path' => ['vendor/mrcore/auth', '../Modules/Auth'],
 			'routes' => 'Http/routes.php',
 			'route_prefix' => null,
@@ -47,9 +47,9 @@ return [
 
 		'Wiki' => [
 			'type' => 'module',
-			'namespace' => 'Mrcore\Modules\Wiki',
-			'controller_namespace' => 'Mrcore\Modules\Wiki\Http\Controllers',
-			'provider' => 'Mrcore\Modules\Wiki\Providers\WikiServiceProvider',
+			'namespace' => 'Mrcore\Wiki',
+			'controller_namespace' => 'Mrcore\Wiki\Http\Controllers',
+			'provider' => 'Mrcore\Wiki\Providers\WikiServiceProvider',
 			'path' => ['vendor/mrcore/wiki', '../Modules/Wiki'],
 			'routes' => 'Http/routes.php',
 			'route_prefix' => null,
@@ -157,7 +157,7 @@ return [
 	| Defines the modules loading order for each item (assets, views, routes).
 	| First item found wins. This fine grained control control over module
 	| overrides giving you the control.
-	| If you have the Mrcore\Modules\Wiki module enabled, then use %app% to define
+	| If you have the Mrcore\Wiki module enabled, then use %app% to define
 	| the order of the dynamically loaded wiki application.  Usually apps are first
 	| which allows an app to be primary override.  Your actual laravel app is not
 	| listed, but always comes first (even above %app%) for assets, views and routes.

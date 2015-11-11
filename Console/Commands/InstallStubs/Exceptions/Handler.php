@@ -1,4 +1,4 @@
-<?php namespace Mrcore\Exceptions;
+<?php namespace App\Exceptions;
 
 use App;
 use Config;

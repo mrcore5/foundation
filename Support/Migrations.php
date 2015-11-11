@@ -1,4 +1,4 @@
-<?php namespace Mrcore\Modules\Foundation\Support;
+<?php namespace Mrcore\Foundation\Support;
 
 use App;
 use Config;
@@ -13,11 +13,8 @@ use Illuminate\Console\Command;
  */
 class Migrations extends Command
 {
-	protected $name;
-	protected $package;
-	protected $version = "1.1";
-	protected $description = "Migrate and seed mrcore package database";
 	protected $signature;
+	protected $description = "Migrate and seed mrcore package database";
 	protected $connection;
 	protected $path;
 	protected $seeder;
@@ -136,19 +133,22 @@ class Migrations extends Command
 		// Laravel DB cannot connect without a valid database, so this is a chicken egg problem
 		// Use raw mysql to create the database first
 		$conn = $this->connection;
-		// Create connection
-		$handle = new \mysqli($conn['host'], $conn['username'], $conn['password']);
-		if ($handle->connect_error) {
-			dd("Connection failed: ".$handle->connect_error);
+
+		if ($conn['driver'] == 'mysql') {
+			// Create connection
+			$handle = new \mysqli($conn['host'], $conn['username'], $conn['password']);
+			if ($handle->connect_error) {
+				dd("Connection failed: ".$handle->connect_error);
+			}
+			// Create database
+			$sql = "CREATE DATABASE IF NOT EXISTS $conn[database]";
+			if ($handle->query($sql) === TRUE) {
+				$this->info("Database $conn[database] created successfully");
+			} else {
+				dd("Error creating database $conn[database]: ".$handle->error);
+			}
+			$handle->close();
 		}
-		// Create database
-		$sql = "CREATE DATABASE IF NOT EXISTS $conn[database]";
-		if ($handle->query($sql) === TRUE) {
-			$this->info("Database $conn[database] created successfully");
-		} else {
-			dd("Error creating database $conn[database]: ".$handle->error);
-		}
-		$handle->close();
 	}
 
 }

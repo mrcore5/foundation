@@ -1,4 +1,4 @@
-<?php namespace Mrcore\Modules\Foundation\Providers;
+<?php namespace Mrcore\Foundation\Providers;
 
 use App;
 use View;
@@ -7,7 +7,7 @@ use Config;
 use Layout;
 use Module;
 use Illuminate\Foundation\AliasLoader;
-use Mrcore\Modules\Foundation\Support\ServiceProvider;
+use Illuminate\Support\ServiceProvider;
 
 class FoundationServiceProvider extends ServiceProvider {
 
@@ -37,7 +37,7 @@ class FoundationServiceProvider extends ServiceProvider {
 
 		// Register Middleware (in boot() to be last, not register())
 		$kernel = $this->app->make('Illuminate\Contracts\Http\Kernel');
-		$kernel->pushMiddleware('Mrcore\Modules\Foundation\Http\Middleware\LoadModules');
+		$kernel->pushMiddleware('Mrcore\Foundation\Http\Middleware\LoadModules');
 
 		// Configure layout modes
 		$simpleMode = Input::get('simple');
@@ -77,12 +77,13 @@ class FoundationServiceProvider extends ServiceProvider {
 		if (App::runningInConsole()) include __DIR__.'/../Support/Helpers.php';
 
 		// Register Facades
+		//
 		$facade = AliasLoader::getInstance();
-		$facade->alias('Module', 'Mrcore\Modules\Foundation\Facades\Module');
-		$facade->alias('Layout', 'Mrcore\Modules\Foundation\Facades\Layout');
+		$facade->alias('Module', 'Mrcore\Foundation\Facades\Module');
+		$facade->alias('Layout', 'Mrcore\Foundation\Facades\Layout');
 
 		// Register UrlServiceProvider (laravel override) for mreschke https ssl termination fix
-		$this->app->register('Mrcore\Modules\Foundation\Providers\UrlServiceProvider');
+		$this->app->register('Mrcore\Foundation\Providers\UrlServiceProvider');
 
 		// Mrcore Module Tracking
 		Module::trace(get_class(), __function__);
@@ -97,7 +98,7 @@ class FoundationServiceProvider extends ServiceProvider {
 		$modules = Module::register();
 
 		// Register our Artisan Commands
-		$this->commands('Mrcore\Modules\Foundation\Console\Commands\InstallCommand');
+		$this->commands('Mrcore\Foundation\Console\Commands\InstallCommand');
 
 	}
 

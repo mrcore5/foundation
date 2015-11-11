@@ -1,15 +1,14 @@
-<?php namespace Mrcore\Modules\Foundation\Facades;
+<?php namespace Mrcore\Foundation\Facades;
 
-/**
- * @see \Mrcore\Modules\Foundation\Support\Module
- */
-class Module extends \Illuminate\Support\Facades\Facade {
+use Illuminate\Support\Facades\Facade;
+
+class Module extends Facade {
 
 	/**
 	 * Get the registered name of the component.
 	 *
 	 * @return string
 	 */
-	protected static function getFacadeAccessor() { return 'Mrcore\Modules\Foundation\Support\Module'; }
+	protected static function getFacadeAccessor() { return 'Mrcore\Foundation\Support\Module'; }
 
 }

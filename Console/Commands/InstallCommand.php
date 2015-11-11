@@ -1,4 +1,4 @@
-<?php namespace Mrcore\Modules\Foundation\Console\Commands;
+<?php namespace Mrcore\Foundation\Console\Commands;
 
 use Artisan;
 use Illuminate\Console\Command;

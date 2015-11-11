@@ -1,6 +1,6 @@
 <?php
 
-use Mrcore\Modules\Foundation\Support\Assets;
+use Mrcore\Foundation\Support\Assets;
 
 //=========================================================================
 // Place this in laravels public/index.php, FIRST THING!

@@ -1,11 +1,12 @@
-<?php namespace Mrcore\Modules\Foundation\Support;
+<?php namespace Mrcore\Foundation\Support;
 
 use Config;
+use Illuminate\Routing\UrlGenerator as LaravelUrlGenerator;
 
 /**
  * Override laravels UrlGenerator
  */
-class UrlGenerator extends \Illuminate\Routing\UrlGenerator {
+class UrlGenerator extends LaravelUrlGenerator {
 
 	/**
 	 * Get the base URL for the request.

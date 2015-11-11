@@ -1,4 +1,4 @@
-<?php namespace Mrcore\Modules\Foundation\Http\Middleware;
+<?php namespace Mrcore\Foundation\Http\Middleware;
 
 use Module;
 use Closure;

@@ -1,9 +1,9 @@
-<?php namespace Mrcore\Modules\Foundation\Support;
+<?php namespace Mrcore\Foundation\Support;
 
 use Config;
 use Closure;
 use Cache as LaravelCache;
- 
+
 class Cache {
 
 	/**
@@ -32,7 +32,7 @@ class Cache {
 		$key = str_replace("\\", "/", $key);
 		$key = str_replace(' ', '_', $key);
 		$key = "mrcore/cache::$key";
-		return $key;		
+		return $key;
 	}
 
 }

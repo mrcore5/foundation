@@ -1,4 +1,4 @@
-<?php namespace Mrcore\Modules\Foundation\Support;
+<?php namespace Mrcore\Foundation\Support;
 
 class Assets {
 
