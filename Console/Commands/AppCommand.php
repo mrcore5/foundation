@@ -50,6 +50,8 @@ class AppCommand extends Command
 		// Ex: db:migrate, make:migration
 		$command = $this->argument('action');
 
+		dump($command);
+
 		if ($this->option('usage') || !$command) return $this->usage();
 
 		if (!str_contains($command, ':')) throw new InvalidArgumentException();
@@ -69,6 +71,7 @@ class AppCommand extends Command
 
 					// Execute method
 					$this->$handleMethod($section, $action);
+					break;
 				}
 			}
 		} else {
