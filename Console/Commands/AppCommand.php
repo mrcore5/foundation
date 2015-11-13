@@ -32,8 +32,9 @@ class AppCommand extends Command
 	public function __construct()
 	{
 		$this->signature = $this->signature.'
-			{action? : db:migrate, db:seed, db:reseed, db:rollback, db:refresh, make:migration},
+			{action? : db:migrate, db:rollback, db:reset, db:refresh, db:seed, db:reseed, make:migration, make:console},
 			{--usage : Show usage and examples},
+			{--force : Force the operation to run when in production},
 			{parameters?* : Any number of parameters for the specified action},
 		';
 		parent::__construct();
@@ -137,62 +138,67 @@ class AppCommand extends Command
 	}
 
 	/**
-	 * Migrate database
+	 * Run the database migrations
 	 */
 	protected function dbMigrate()
 	{
 		$this->call('migrate', [
 			'--database' => $this->connection['name'],
-			'--path' => "$this->relativePath/Database/Migrations/"
+			'--path' => "$this->relativePath/Database/Migrations/",
+			'--force' => $force = $this->input->getOption('force')
 		]);
 	}
 
 	/**
-	 * Seed database
-	 */
-	protected function dbSeed()
-	{
-		if (App::environment() === 'production') {
-			throw new Exception("You cannot seed in production");
-		}
-		$this->call('db:seed', [
-			'--database' => $this->connection['name'],
-			'--class' => $this->seeder
-		]);
-	}
-
-	/**
-	 * Refresh then seed database
-	 */
-	protected function dbReseed()
-	{
-		if (App::environment() === 'production') {
-			throw new Exception("You cannot seed in production");
-		}
-		$this->dbRefresh();
-		$this->dbSeed();
-	}
-
-	/**
-	 * Rollback migrations
+	 * Rollback the last database migration
 	 */
 	protected function dbRollback()
 	{
 		$this->call('migrate:rollback', [
-			'--database' => $this->connection['name']
+			'--database' => $this->connection['name'],
+			'--force' => $force = $this->input->getOption('force')
 		]);
 	}
 
 	/**
-	 * Refresh migrations (rollback all, then migrate)
+	 * Rolls all of the currently applied migrations back
+	 */
+	protected function dbReset()
+	{
+		$this->call('migrate:reset', [
+			'--database' => $this->connection['name'],
+			'--force' => $force = $this->input->getOption('force')
+		]);
+	}
+
+	/**
+	 * Reset and re-run all migrations (no seed)
 	 */
 	protected function dbRefresh()
 	{
-		if (App::environment() === 'production') {
-			throw new Exception("You cannot rollback in production");
-		}
-		$this->dbRollback();
+		$this->dbReset();
 		$this->dbMigrate();
+	}
+
+	/**
+	 * Seed the database with records
+	 */
+	protected function dbSeed()
+	{
+		$this->call('db:seed', [
+			'--database' => $this->connection['name'],
+			'--class' => $this->seeder,
+			'--force' => $force = $this->input->getOption('force')
+		]);
+	}
+
+	/**
+	 * Refresh and seed (reset, migrate, seed)
+	 */
+	protected function dbReseed()
+	{
+		$this->dbRefresh();
+		$this->dbSeed();
 	}
 
 	/**
@@ -300,20 +306,23 @@ As a helper, create yourself a /usr/local/bin/myapp script like so
 
 Database Helper Commands
 -----------------------
-Migrate a database (will NOT create the database if not exist)
+Run the database migrations (will not autocreate the database)
   myapp app db:migrate
 
-Seed database tables
-  myapp app db:seed
-
-Rollback, Migrate, Seed database (refresh + seed)
-  myapp app db:reseed
-
-Rollback last migration
+Rollback the last database migration
   myapp app db:rollback
 
-Rollback, Migrate (no seed)
+Rolls all of the currently applied migrations back
+  myapp app db:reset
+
+Reset and re-run all migrations (no seed)
   myapp app db:refresh
+
+Seed the database with records
+  myapp app db:seed
+
+Refresh and seed (reset, migrate, seed)
+  myapp app db:reseed
 
 
 Maker Helper Commands
