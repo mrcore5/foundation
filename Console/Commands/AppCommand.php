@@ -50,8 +50,6 @@ class AppCommand extends Command
 		// Ex: db:migrate, make:migration
 		$command = $this->argument('action');
 
-		dump($command);
-
 		if ($this->option('usage') || !$command) return $this->usage();
 
 		if (!str_contains($command, ':')) throw new InvalidArgumentException();
