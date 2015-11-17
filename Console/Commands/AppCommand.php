@@ -278,6 +278,7 @@ class AppCommand extends Command
 	protected function testRun()
 	{
 		$params = $this->argument('parameters');
+		$filter = '';
 		if (count($params) == 1) {
 			// Adding a filter`
 			$filter = "--filter=$params[0]";
