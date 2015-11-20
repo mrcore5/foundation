@@ -76,6 +76,7 @@ return [
 			'css' => [
 				'css/bootstrap/simplex.min.css',
 				'css/bootstrap/override/theme-simplex.css',
+				'css/prism-light.css',
 			],
 			'container' => [
 				'header' => true,
