@@ -59,6 +59,14 @@ return [
 			'enabled' => false,
 		],
 
+		'Parser' => [
+			'type' => 'module',
+			'namespace' => 'Mrcore\Parser',
+			'provider' => 'Mrcore\Parser\Providers\ParserServiceProvider',
+			'path' => ['vendor/mrcore/parser', '../Modules/Parser'],
+			'enabled' => true,
+		],
+
 		// Bootswatch Themes
 		// default cerulean cosmo cyborg darkly flatly journal lumen paper
 		// readable sandstone simplex slate spacelab superhero united yeti
@@ -100,6 +108,7 @@ return [
 			'css' => [
 				'css/bootstrap/slate.min.css',
 				#'css/bootstrap/override/example.css',
+				#'css/prism-light.css',
 			],
 			'enabled' => false,
 		],
