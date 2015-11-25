@@ -64,7 +64,7 @@ return [
 			'namespace' => 'Mrcore\Parser',
 			'provider' => 'Mrcore\Parser\Providers\ParserServiceProvider',
 			'path' => ['vendor/mrcore/parser', '../Modules/Parser'],
-			'enabled' => true,
+			'enabled' => false,
 		],
 
 		// Bootswatch Themes
