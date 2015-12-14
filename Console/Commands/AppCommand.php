@@ -32,7 +32,7 @@ class AppCommand extends Command
 	public function __construct()
 	{
 		$this->signature = $this->signature.'
-			{action? : db:migrate, db:rollback, db:reset, db:refresh, db:seed, db:reseed, make:migration, make:console},
+			{action? : db:migrate, db:rollback, db:reset, db:refresh, db:seed, db:reseed, db:status, make:migration, make:console},
 			{--usage : Show usage and examples},
 			{--force : Force the operation to run when in production},
 			{parameters?* : Any number of parameters for the specified action},
@@ -203,6 +203,17 @@ class AppCommand extends Command
 	}
 
 	/**
+	 * Status on migrations
+	 */
+	protected function dbStatus()
+	{
+		$this->call('migrate:status', [
+			'--database' => $this->connection['name'],
+			'--path' => "$this->relativePath/Database/Migrations/"
+		]);
+	}
+
+	/**
 	 * Make console command file
 	 */
 	protected function makeConsole()
@@ -326,6 +337,8 @@ Seed the database with records
 Refresh and seed (reset, migrate, seed)
   myapp app db:reseed
 
+Status on migrations
+  myapp app db:status
 
 Maker Helper Commands
 ---------------------
