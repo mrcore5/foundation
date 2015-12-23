@@ -16,7 +16,7 @@
 		}
 	],
 	"require": {
-		"mreschke/helpers": "^1.0"
+		"mreschke/helpers": "~1.0"
 	},
 	"autoload": {
 		"psr-4": {
