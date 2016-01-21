@@ -16,7 +16,8 @@ Response::macro('denied', function()
 {
 	if (Auth::check()) {
 		// If logged in then show 401 error page
-		return Response::view('errors.401', array(), 401);
+		#return Response::view('errors.401', array(), 401);
+		return abort(401);
 	} else {
 		$url = Request::url();
 		if (Request::server('QUERY_STRING')) $url .= "?".Request::server('QUERY_STRING');
@@ -26,5 +27,6 @@ Response::macro('denied', function()
 
 Response::macro('error', function()
 {
-	return Response::view('errors.500', array(), 500);
+	#return Response::view('errors.500', array(), 500);
+	return abort(500);
 });
