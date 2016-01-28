@@ -25,4 +25,7 @@ return [
 	'use_cache' => env('MRCORE_FOUNDATION_CACHE', true),
 	'cache_expires' => env('MRCORE_FOUNDATION_CACHE_EXPIRES', 60),
 
+	// If null, will disable any ?v= addition
+	'asset_cache_version' => env('MRCORE_FOUNDATION_ASSET_CACHE_VERSION', null),
+
 ];

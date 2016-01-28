@@ -19,7 +19,12 @@ if ( ! function_exists('asset'))
 	 */
 	function asset($path, $secure = null)
 	{
-		$path = "/assets/$path";
+		$assetCacheVersion = config('mrcore.foundation.asset_cache_version');
+		if (isset($assetCacheVersion)) {
+			$path = "/assets/$path?v=$assetCacheVersion";
+		} else {
+			$path = "/assets/$path";
+		}
 		return app('url')->asset($path, $secure);
 	}
 }
