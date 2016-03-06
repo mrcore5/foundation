@@ -63,7 +63,7 @@ if ( ! function_exists('dumpt'))
 
 				if (is_numeric($items) || is_string($items)) {
 					// Basic strings and numbers
-					$dump($items);
+					echo $items;
 
 				} elseif ($items instanceof Collection) {
 					$dumpArray($items->flatten()->toArray());
