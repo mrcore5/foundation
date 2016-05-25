@@ -109,8 +109,7 @@ if (file_exists(\"\$basePath/vendor/mrcore/foundation/Bootstrap/Start.php\")) {
     require \"\$basePath/vendor/mrcore/foundation/Bootstrap/Start.php\";
 } else {
     require \"\$basePath/../Modules/Foundation/Bootstrap/Start.php\";
-}
-";
+}";
 
 		$this->info("* Installing Bootstrap to ./bootstrap/autoload.php");
 		$autoloadContents = str_replace($bootstrapSearch, $bootstrapReplace, $autoloadContents);
