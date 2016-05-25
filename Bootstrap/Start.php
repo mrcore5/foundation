@@ -2,10 +2,6 @@
 
 use Mrcore\Foundation\Support\Assets;
 
-//=========================================================================
-// Place this in laravels public/index.php, FIRST THING!
-//=========================================================================
-
 /*
 |--------------------------------------------------------------------------
 | Mrcore Foundation
@@ -14,19 +10,28 @@ use Mrcore\Foundation\Support\Assets;
 | Fire up the mrcore foundation to allow asset handling
 | and other foundation support bootstraping.
 |
+| Include this from laravels ./public/index.php and ./artisan, FIRST THING!
+|
 */
 
-#$basePath = realpath(__DIR__.'/../');
-#require __DIR__.'/../vendor/mrcore/foundation/Bootstrap/Start.php';
+if (!isset($runningInConsole)) $runningInConsole = false;
 
-//=========================================================================
+if ($runningInConsole) {
+	// Running from artisan console
 
 
-// Stream all /assets/* files from the defined theme folders
-if (substr($_SERVER['REQUEST_URI'], 0, 7) == '/assets') {
-	require __DIR__.'/../Support/Assets.php';
-	$assets = new Assets($basePath, $_SERVER['REQUEST_URI']);
-	exit();
+} else {
+	// Running from web public/index.php
+
+	// Stream all /assets/* files from the defined theme folders
+	if (isset($_SERVER['REQUEST_URI'])) {
+		if (substr($_SERVER['REQUEST_URI'], 0, 7) == '/assets') {
+			require __DIR__.'/../Support/Assets.php';
+			$assets = new Assets($basePath, $_SERVER['REQUEST_URI']);
+			exit();
+		}
+	}
+
 }
 
 // Helpers functions

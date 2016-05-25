@@ -44,8 +44,10 @@ class InstallCommand extends Command {
 		$this->info('Installing mrcore/foundation');
 
 		$index = base_path('public/index.php');
-		$contents = file_get_contents($index);
-		if (str_contains($contents, "Mrcore Foundation")) {
+		$artisan = base_path('artisan');
+		$indexContents = file_get_contents($index);
+		$artisanContents = file_get_contents($artisan);
+		if (str_contains($indexContents, "Mrcore Foundation")) {
 			// Already installed asset manager
 			$this->error("Foundation has already been installed!");
 			exit();
@@ -89,9 +91,8 @@ class InstallCommand extends Command {
 		// Handler.php stub in this Commands/InstallStubs/Exceptions/Handler.php
 		// you can get whopps back perfectly.
 
-		// Install Asset Manager
-		$this->info("* Installing Asset Manager to public/index.php");
-		$contents = str_replace("<?php", "<?php
+		// Install Bootstrap
+		$bootstrap = "<?php
 
 /*
 |--------------------------------------------------------------------------
@@ -103,13 +104,20 @@ class InstallCommand extends Command {
 |
 */
 
-\$basePath = realpath(__DIR__.'/../');
-if (file_exists(__DIR__.'/../vendor/mrcore/foundation/Bootstrap/Start.php')) {
-	require __DIR__.'/../vendor/mrcore/foundation/Bootstrap/Start.php' ;
-} else {
-	require __DIR__.'/../../Modules/Foundation/Bootstrap/Start.php';
-}", $contents);
-		file_put_contents($index, $contents);
+\$basePath = realpath(__DIR__.'/../'); \$runningInConsole = false;
+\$start = \"vendor/mrcore/foundation/Bootstrap/Start.php\";
+if (strpos(__FILE__, 'artisan') !== false) { \$runningInConsole = true; \$basePath = realpath(__DIR__); }
+if (file_exists(\"\$basePath/\$start\")) { require \"\$basePath/\$start\"; } else { require \"\$basepath/../\$start\"; }
+";
+
+		$this->info("* Installing Bootstrap to ./public/index.php");
+		$indexContents = str_replace("<?php", $bootstrap, $indexContents);
+		file_put_contents($index, $indexContents);
+
+		$this->info("* Installing Bootstrap to ./artisan");
+		$artisanContents = str_replace("<?php", $bootstrap, $artisanContents);
+		file_put_contents($index, $artisanContents);
+
 
 		// Done
 		$this->info('Installation complete!');
