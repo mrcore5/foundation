@@ -43,11 +43,9 @@ class InstallCommand extends Command {
 	{
 		$this->info('Installing mrcore/foundation');
 
-		$index = base_path('public/index.php');
-		$artisan = base_path('artisan');
-		$indexContents = file_get_contents($index);
-		$artisanContents = file_get_contents($artisan);
-		if (str_contains($indexContents, "Mrcore Foundation")) {
+		$autoload = base_path('bootstrap/autoload.php');
+		$autoloadContents = file_get_contents($autoload);
+		if (str_contains($autoloadContents, "Mrcore Foundation")) {
 			// Already installed asset manager
 			$this->error("Foundation has already been installed!");
 			exit();
@@ -92,7 +90,8 @@ class InstallCommand extends Command {
 		// you can get whopps back perfectly.
 
 		// Install Bootstrap
-		$bootstrap = "<?php
+		$bootstrapSearch = "define('LARAVEL_START', microtime(true));";
+		$bootstrapReplace = "$bootstrapSearch
 
 /*
 |--------------------------------------------------------------------------
@@ -104,20 +103,18 @@ class InstallCommand extends Command {
 |
 */
 
-\$basePath = realpath(__DIR__.'/../'); \$runningInConsole = false;
-\$start = \"vendor/mrcore/foundation/Bootstrap/Start.php\";
-if (strpos(__FILE__, 'artisan') !== false) { \$runningInConsole = true; \$basePath = realpath(__DIR__); }
-if (file_exists(\"\$basePath/\$start\")) { require \"\$basePath/\$start\"; } else { require \"\$basepath/../\$start\"; }
+\$basePath = realpath(__DIR__.'/../');
+\$runningInConsole = php_sapi_name() == 'cli';
+if (file_exists(\"\$basePath/vendor/mrcore/foundation/Bootstrap/Start.php\")) {
+    require \"\$basePath/vendor/mrcore/foundation/Bootstrap/Start.php\";
+} else {
+    require \"\$basePath/../Modules/Foundation/Bootstrap/Start.php\";
+}
 ";
 
-		$this->info("* Installing Bootstrap to ./public/index.php");
-		$indexContents = str_replace("<?php", $bootstrap, $indexContents);
-		file_put_contents($index, $indexContents);
-
-		$this->info("* Installing Bootstrap to ./artisan");
-		$artisanContents = str_replace("<?php", $bootstrap, $artisanContents);
-		file_put_contents($index, $artisanContents);
-
+		$this->info("* Installing Bootstrap to ./bootstrap/autoload.php");
+		$autoloadContents = str_replace($bootstrapSearch, $bootstrapReplace, $autoloadContents);
+		file_put_contents($autoload, $autoloadContents);
 
 		// Done
 		$this->info('Installation complete!');
