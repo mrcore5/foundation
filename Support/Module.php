@@ -212,7 +212,12 @@ class Module {
 					// Load this modules routes
 					$this->trace($path);
 					$prefix = (isset($module['route_prefix']) ? $module['route_prefix'] : '');
-					Route::group(['namespace' => $module['controller_namespace'], 'prefix' => $prefix], function($router) use($path) {
+					Route::group(
+						[
+							'namespace' => $module['controller_namespace'],
+							'prefix' => $prefix,
+							'middleware' => 'web',
+						], function($router) use($path) {
 						require $path;
 					});
 

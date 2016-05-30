@@ -1,11 +1,10 @@
 <?php namespace Mrcore\Foundation\Providers;
 
-use App;
 use View;
-use Input;
 use Config;
 use Layout;
 use Module;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 
@@ -24,7 +23,7 @@ class FoundationServiceProvider extends ServiceProvider {
 	 *
 	 * @return void
 	 */
-	public function boot()
+	public function boot(Request $request)
 	{
 		// Mrcore Module Tracking
 		Module::trace(get_class(), __function__);
@@ -40,20 +39,20 @@ class FoundationServiceProvider extends ServiceProvider {
 		$kernel->pushMiddleware('Mrcore\Foundation\Http\Middleware\LoadModules');
 
 		// Configure layout modes
-		$simpleMode = Input::get('simple');
-		if (isset($simpleMode) || Input::get('viewmode') == 'simple') {
+		$simpleMode = $request->input('simple');
+		if (isset($simpleMode) || $request->input('viewmode') == 'simple') {
 			Layout::mode('simple');
 		}
-		$rawMode = Input::get('raw');
-		if (isset($rawMode) || Input::get('viewmode') == 'raw') {
+		$rawMode = $request->input('raw');
+		if (isset($rawMode) || $request->input('viewmode') == 'raw') {
 			Layout::mode('raw');
 		}
-		$defaultMode = Input::get('default');
-		if (isset($defaultMode) || Input::get('viewmode') == 'default') {
+		$defaultMode = $request->input('default');
+		if (isset($defaultMode) || $request->input('viewmode') == 'default') {
 			Layout::mode('default');
 		}
 
-		if (App::runningInConsole()) {
+		if (app()->runningInConsole()) {
 			// We are running in the console (artisan, testing or queue worders)
 			// The console does NOT use HTTP middleware which is where my
 			// Module system calls loadViews() and loadRoutes().  We don't really
@@ -72,12 +71,7 @@ class FoundationServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		// Include dynatron helper functions ONLY if from console as its already
-		// fired up from index.php if from http
-		if (App::runningInConsole()) include __DIR__.'/../Support/Helpers.php';
-
 		// Register Facades
-		//
 		$facade = AliasLoader::getInstance();
 		$facade->alias('Module', 'Mrcore\Foundation\Facades\Module');
 		$facade->alias('Layout', 'Mrcore\Foundation\Facades\Layout');

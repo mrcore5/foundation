@@ -1,63 +1,73 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the controller to call when that URI is requested.
-|
-*/
+Route::group(['middleware' => 'web'], function() {
+	Route::get('/xx', function() {
+		dump('route', Auth::user());
+		dump(Module::trace());
+		return 'Hi /';
+	});
 
-Route::get('/', function() {
-	return '
-		<html>
-			<head>
-				<title>Laravel</title>
-				<link href="//fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
-				<style>
-					body {
-						margin: 0;
-						padding: 0;
-						width: 100%;
-						height: 100%;
-						color: #B0BEC5;
-						display: table;
-						font-weight: 100;
-						font-family: "Lato";
-					}
+	Route::get('/login', function() {
+		Auth::loginUsingId(1);
+		#dd(Auth::user());
+		return 'login here';
+	});
 
-					.container {
-						text-align: center;
-						display: table-cell;
-						vertical-align: middle;
-					}
 
-					.content {
-						text-align: center;
-						display: inline-block;
-					}
-
-					.title {
-						font-size: 96px;
-						margin-bottom: 40px;
-					}
-
-					.quote {
-						font-size: 24px;
-					}
-				</style>
-			</head>
-			<body>
-				<div class="container">
-					<div class="content">
-						<div class="title">mRcore Foundation</div>
-						<div class="quote">'.Inspiring::quote().'</div>
-					</div>
-				</div>
-			</body>
-		</html>
-	';
+	Route::get('/logout', function() {
+		#Auth::loginUsingId(1);
+		Auth::logout();
+		return 'logout';
+	});
 });
+
+Route::get('/x', ['middleware' => 'web', function() {
+	dump('foundation / route', \Auth::user());
+
+	return '<!DOCTYPE html>
+	<html>
+		<head>
+			<title>mRcore Foundation</title>
+
+			<link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
+
+			<style>
+				html, body {
+					height: 100%;
+				}
+
+				body {
+					margin: 0;
+					padding: 0;
+					width: 100%;
+					display: table;
+					font-weight: 100;
+					font-family: "Lato";
+				}
+
+				.container {
+					text-align: center;
+					display: table-cell;
+					vertical-align: middle;
+				}
+
+				.content {
+					text-align: center;
+					display: inline-block;
+				}
+
+				.title {
+					font-size: 96px;
+				}
+			</style>
+		</head>
+		<body>
+			<div class="container">
+				<div class="content">
+					<div class="title">mRcore Foundation</div>
+					<div>Powered by Laravel</div>
+				</div>
+			</div>
+		</body>
+	</html>';
+}]);

@@ -18,7 +18,7 @@ See https://github.com/mrcore5/framework for details and installation instructio
 
 For this foundation module, well, there isn't any...yet.
 
-Foundation specific documentaion will be here in the future.
+Foundation specific documentation will be here in the future.
 
 For now, see https://github.com/mrcore5/framework
 

@@ -9,6 +9,7 @@ class Layout extends Facade {
 	 *
 	 * @return string
 	 */
-	protected static function getFacadeAccessor() { return 'Mrcore\Foundation\Support\Layout'; }
-
+	protected static function getFacadeAccessor() {
+		return 'Mrcore\Foundation\Support\Layout';
+	}
 }

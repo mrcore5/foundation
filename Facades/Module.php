@@ -9,6 +9,8 @@ class Module extends Facade {
 	 *
 	 * @return string
 	 */
-	protected static function getFacadeAccessor() { return 'Mrcore\Foundation\Support\Module'; }
-
+	protected static function getFacadeAccessor()
+	{
+		return 'Mrcore\Foundation\Support\Module';
+	}
 }
