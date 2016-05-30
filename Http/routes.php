@@ -1,29 +1,6 @@
 <?php
 
-Route::group(['middleware' => 'web'], function() {
-	Route::get('/xx', function() {
-		dump('route', Auth::user());
-		dump(Module::trace());
-		return 'Hi /';
-	});
-
-	Route::get('/login', function() {
-		Auth::loginUsingId(1);
-		#dd(Auth::user());
-		return 'login here';
-	});
-
-
-	Route::get('/logout', function() {
-		#Auth::loginUsingId(1);
-		Auth::logout();
-		return 'logout';
-	});
-});
-
 Route::get('/x', ['middleware' => 'web', function() {
-	dump('foundation / route', \Auth::user());
-
 	return '<!DOCTYPE html>
 	<html>
 		<head>
