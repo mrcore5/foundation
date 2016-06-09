@@ -1,6 +1,6 @@
 <?php
 
-Route::get('/x', ['middleware' => 'web', function() {
+Route::get('/', ['middleware' => 'web', function() {
 	return '<!DOCTYPE html>
 	<html>
 		<head>

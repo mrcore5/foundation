@@ -94,6 +94,7 @@ class FoundationServiceProvider extends ServiceProvider {
 		// Register our Artisan Commands
 		$this->commands('Mrcore\Foundation\Console\Commands\ClearQueueCommand');
 		$this->commands('Mrcore\Foundation\Console\Commands\InstallCommand');
+		$this->commands('Mrcore\Foundation\Console\Commands\AppMakeCommand');
 
 	}
 
