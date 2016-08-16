@@ -22,8 +22,13 @@ class Assets {
 				$uri = substr($uri, strpos($uri, "$vendor/$package") + strlen("$vendor/$package"));
 
 				// Check for app in ../Apps first for dev override, then vendor
-				if (!$path = realpath("$basePath/../Apps/".$this->studly($vendor)."/".$this->studly($package)."/Assets")) {
-					$path = realpath("$basePath/vendor/$vendor/$package/Assets");
+				// Try Public folders first, if none, try Assets folder...try in both app and vendor folders
+				if (!$path = realpath("$basePath/../Apps/".$this->studly($vendor)."/".$this->studly($package)."/Public")) {
+					if (!$path = realpath("$basePath/../Apps/".$this->studly($vendor)."/".$this->studly($package)."/Assets")) {
+						if (!$path = realpath("$basePath/vendor/$vendor/$package/Public")) {
+							$path = realpath("$basePath/vendor/$vendor/$package/Assets");
+						}
+					}
 				}
 				if ($path) $paths[] = $path;
 			}
