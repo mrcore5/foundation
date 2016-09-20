@@ -250,7 +250,11 @@ class FoundationServiceProvider extends ServiceProvider
 	protected function registerMiddleware(Kernel $kernel, Router $router)
 	{
 		// Register global middleware
-		$kernel->pushMiddleware('Mrcore\Foundation\Http\Middleware\LoadModules');
+		$kernel->pushMiddleware(\Mrcore\Foundation\Http\Middleware\LoadModules::class);
+		
+		// Authenticate mrcore applications and modules
+		// Enable if you are testing laravel 5.3 new auth stuff
+		$router->pushMiddlewareToGroup('web', \Mrcore\Foundation\Http\Middleware\AuthenticateApp::class);
 
 		// Register route based middleware
 		#$router->middleware('auth.appstub', 'Mrcore\Appstub\Http\Middleware\Authenticate');
