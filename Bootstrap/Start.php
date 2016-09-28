@@ -14,24 +14,23 @@ use Mrcore\Foundation\Support\Assets;
 |
 */
 
-if (!isset($runningInConsole)) $runningInConsole = false;
+if (!isset($runningInConsole)) {
+    $runningInConsole = false;
+}
 
 if ($runningInConsole) {
-	// Running from artisan console
-
-
+    // Running from artisan console
 } else {
-	// Running from web public/index.php
+    // Running from web public/index.php
 
-	// Stream all /assets/* files from the defined theme folders
-	if (isset($_SERVER['REQUEST_URI'])) {
-		if (substr($_SERVER['REQUEST_URI'], 0, 7) == '/assets') {
-			require __DIR__.'/../Support/Assets.php';
-			$assets = new Assets($basePath, $_SERVER['REQUEST_URI']);
-			exit();
-		}
-	}
-
+    // Stream all /assets/* files from the defined theme folders
+    if (isset($_SERVER['REQUEST_URI'])) {
+        if (substr($_SERVER['REQUEST_URI'], 0, 7) == '/assets') {
+            require __DIR__.'/../Support/Assets.php';
+            $assets = new Assets($basePath, $_SERVER['REQUEST_URI']);
+            exit();
+        }
+    }
 }
 
 // Helpers functions

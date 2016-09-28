@@ -1,26 +1,26 @@
 {
-	"name": "mrcore/foundation",
-	"type": "library",
-	"description": "Mrcore Foundation",
-	"keywords": ["mrcore", "framework", "laravel", "foundation"],
-	"homepage": "http://github.com/mrcore5/foundation",
-	"license": "MIT",
-	"support": {
-		"issues": "https://github.com/mrcore5/foundation/issues"
-	},
-	"authors": [
-		{
-			"name": "Matthew Reschke",
-			"email": "mail@mreschke.com",
-			"homepage": "http://mreschke.com"
-		}
-	],
-	"require": {
-		"mreschke/helpers": "~1.0"
-	},
-	"autoload": {
-		"psr-4": {
-			"Mrcore\\Foundation\\": ""
-		}
-	}
+    "name": "mrcore/foundation",
+    "type": "library",
+    "description": "Mrcore Foundation",
+    "keywords": ["mrcore", "framework", "laravel", "foundation"],
+    "homepage": "http://github.com/mrcore5/foundation",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/mrcore5/foundation/issues"
+    },
+    "authors": [
+        {
+            "name": "Matthew Reschke",
+            "email": "mail@mreschke.com",
+            "homepage": "http://mreschke.com"
+        }
+    ],
+    "require": {
+        "mreschke/helpers": "~1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mrcore\\Foundation\\": ""
+        }
+    }
 }

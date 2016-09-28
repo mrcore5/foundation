@@ -6,7 +6,8 @@ use Exception;
 use Illuminate\Http\Response;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
-class Handler extends ExceptionHandler {
+class Handler extends ExceptionHandler
+{
 
     /**
      * A list of the exception types that should not be reported.
@@ -61,5 +62,4 @@ class Handler extends ExceptionHandler {
             $whoops->handleException($e), $e->getStatusCode(), $e->getHeaders()
         );
     }
-
 }

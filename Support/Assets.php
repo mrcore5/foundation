@@ -1,184 +1,187 @@
 <?php namespace Mrcore\Foundation\Support;
 
-class Assets {
+class Assets
+{
+    public function __construct($basePath, $uri)
+    {
+        // Remove ? query string
+        $uri = strtok($uri, '?');
 
-	public function __construct($basePath, $uri)
-	{
-		// Remove ? query string
-		$uri = strtok($uri, '?');
+        // Remove leading /assets
+        $uri = substr($uri, 7); //ex: /css/bootstrap.css
+        $segments = explode("/", $uri);
 
-		// Remove leading /assets
-		$uri = substr($uri, 7); //ex: /css/bootstrap.css
-		$segments = explode("/", $uri);
+        // Define asset paths
+        $paths = [];
 
-		// Define asset paths
-		$paths = [];
+        if (substr($uri, 0, 4) == '/app') {
+            // Load css from an mrcore application
+            if (count($segments) >= 4) {
+                $vendor = $segments[2];
+                $package = $segments[3];
+                $uri = substr($uri, strpos($uri, "$vendor/$package") + strlen("$vendor/$package"));
 
-		if (substr($uri, 0, 4) == '/app') {
-			// Load css from an mrcore application
-			if (count($segments) >= 4) {
-				$vendor = $segments[2];
-				$package = $segments[3];
-				$uri = substr($uri, strpos($uri, "$vendor/$package") + strlen("$vendor/$package"));
+                // Check for app in ../Apps first for dev override, then vendor
+                // Try Public folders first, if none, try Assets folder...try in both app and vendor folders
+                if (!$path = realpath("$basePath/../Apps/".$this->studly($vendor)."/".$this->studly($package)."/Public")) {
+                    if (!$path = realpath("$basePath/../Apps/".$this->studly($vendor)."/".$this->studly($package)."/Assets")) {
+                        if (!$path = realpath("$basePath/vendor/$vendor/$package/Public")) {
+                            $path = realpath("$basePath/vendor/$vendor/$package/Assets");
+                        }
+                    }
+                }
+                if ($path) {
+                    $paths[] = $path;
+                }
+            }
+        } else {
+            // Load css from module assets
+            $config = require "$basePath/config/modules.php";
+            $modules = $config['modules'];
+            $assets = $config['assets'];
 
-				// Check for app in ../Apps first for dev override, then vendor
-				// Try Public folders first, if none, try Assets folder...try in both app and vendor folders
-				if (!$path = realpath("$basePath/../Apps/".$this->studly($vendor)."/".$this->studly($package)."/Public")) {
-					if (!$path = realpath("$basePath/../Apps/".$this->studly($vendor)."/".$this->studly($package)."/Assets")) {
-						if (!$path = realpath("$basePath/vendor/$vendor/$package/Public")) {
-							$path = realpath("$basePath/vendor/$vendor/$package/Assets");
-						}
-					}
-				}
-				if ($path) $paths[] = $path;
-			}
+            // Always add mrcore public at the end
+            if ($path = realpath("$basePath/public")) {
+                $paths[] = $path;
+            }
 
-		} else {
-			// Load css from module assets
-			$config = require "$basePath/config/modules.php";
-			$modules = $config['modules'];
-			$assets = $config['assets'];
+            // Add module assets
+            foreach ($assets as $moduleName) {
+                if (isset($modules[$moduleName])) {
+                    $module = $modules[$moduleName];
+                    if (!isset($module['enabled']) || $module['enabled'] == true) {
+                        if (isset($module['assets'])) {
+                            // Can have multiple paths, first one wins
+                            $modulePaths = is_array($module['path']) ? $module['path'] : [$module['path']];
+                            foreach ($modulePaths as $path) {
+                                if (substr($path, 0, 1) != '/') {
+                                    $path = "$basePath/$path";
+                                } // relatove to absolute
+                                $path = "$path/$module[assets]";
+                                if ($path = realpath($path)) {
+                                    $paths[] = $path;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-			// Always add mrcore public at the end
-			if ($path = realpath("$basePath/public")) $paths[] = $path;
+        // Stream asset
+        if (count($paths) > 0) {
+            $this->streamFile($uri, $paths);
+        }
+    }
 
-			// Add module assets
-			foreach ($assets as $moduleName) {
-				if (isset($modules[$moduleName])) {
-					$module = $modules[$moduleName];
-					if (!isset($module['enabled']) || $module['enabled'] == true) {
-						if (isset($module['assets'])) {
-							// Can have multiple paths, first one wins
-							$modulePaths = is_array($module['path']) ? $module['path'] : [$module['path']];
-							foreach ($modulePaths as $path) {
-								if (substr($path, 0, 1) != '/') $path = "$basePath/$path"; // relatove to absolute
-								$path = "$path/$module[assets]";
-								if ($path = realpath($path)) {
-									$paths[] = $path;
-									break;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+    /**
+     * Convert a value to studly caps case
+     * @param  string $value
+     * @return string
+     */
+    private function studly($value)
+    {
+        $value = ucwords(str_replace(array('-', '_'), ' ', $value));
+        return str_replace(' ', '', $value);
+    }
 
-		// Stream asset
-		if (count($paths) > 0) {
-			$this->streamFile($uri, $paths);
-		}
+    /**
+     * Stream first file in $paths by $uri
+     * @param  string $uri   ex: /css/bootstrap.css
+     * @param  array $paths array of paths, first found wins
+     * @return void
+     */
+    private function streamFile($uri, $paths)
+    {
+        // Use first file found in $paths array
+        foreach ($paths as $path) {
+            $file = $path.$uri;
+            if (file_exists($file) && !is_dir($file)) {
 
-	}
+                // Asset file found in $path
+                $filename = pathinfo($file)['basename'];
+                $size = filesize($file);
+                $ext = strtolower(pathinfo($file)['extension']);
+                $mimetype = $this->mimetype($file);
 
-	/**
-	 * Convert a value to studly caps case
-	 * @param  string $value
-	 * @return string
-	 */
-	private function studly($value)
-	{
-		$value = ucwords(str_replace(array('-', '_'), ' ', $value));
-		return str_replace(' ', '', $value);
-	}
+                if ($ext == 'php') {
+                    $this->notFound();
+                }
 
-	/**
-	 * Stream first file in $paths by $uri
-	 * @param  string $uri   ex: /css/bootstrap.css
-	 * @param  array $paths array of paths, first found wins
-	 * @return void
-	 */
-	private function streamFile($uri, $paths)
-	{
-		// Use first file found in $paths array
-		foreach ($paths as $path) {
-			$file = $path.$uri;
-			if (file_exists($file) && !is_dir($file)) {
+                // Inline Stream with caching
+                // Uses file modified date to refresh cache, so you always get a new file if modified!
+                header("Content-type: $mimetype");
+                header("Content-Disposition: inline; filename=\"$filename\"");
 
-				// Asset file found in $path
-				$filename = pathinfo($file)['basename'];
-				$size = filesize($file);
-				$ext = strtolower(pathinfo($file)['extension']);
-				$mimetype = $this->mimetype($file);
+                // Checking if the client is validating his cache and if it is current.
+                $expires = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? strtoupper($_SERVER['HTTP_IF_MODIFIED_SINCE']) : 'now'; //FRI, 22 MAY 2015 19:02:08 GMT
+                $fileModified = strtoupper(gmdate('D, d M Y H:i:s', filemtime($file)).' GMT');                                 //FRI, 22 MAY 2015 19:02:08 GMT
+                if ($expires == $fileModified) {
+                    // Client's cache IS current, so we just respond '304 Not Modified'.
+                    $this->notModified();
+                } else {
+                    // Image not cached or cache outdated, we respond '200 OK' and output the image.
+                    header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($file)).' GMT', true, 200);
+                }
+                #this control doesn't seem to matter
+                #header("Cache-control: public"); //required for If-Modified-Since header to exist from browser
 
-				if ($ext == 'php') $this->notFound();
+                header("Content-length: $size");
 
-				// Inline Stream with caching
-				// Uses file modified date to refresh cache, so you always get a new file if modified!
-				header("Content-type: $mimetype");
-				header("Content-Disposition: inline; filename=\"$filename\"");
+                // Trick PHP into thinking this page is done, so it unlocks the session file to allow for further site navigation and downloading
+                session_write_close();
 
-				// Checking if the client is validating his cache and if it is current.
-				$expires = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? strtoupper($_SERVER['HTTP_IF_MODIFIED_SINCE']) : 'now'; //FRI, 22 MAY 2015 19:02:08 GMT
-				$fileModified = strtoupper(gmdate('D, d M Y H:i:s', filemtime($file)).' GMT');                                 //FRI, 22 MAY 2015 19:02:08 GMT
-				if ($expires == $fileModified) {
-					// Client's cache IS current, so we just respond '304 Not Modified'.
-					$this->notModified();
+                // Return file content
+                readfile($file); // reads directly to output buffer, faster than file_get_contents which reads into variable first
+                exit();
+            }
+        }
 
-				} else {
-					// Image not cached or cache outdated, we respond '200 OK' and output the image.
-					header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($file)).' GMT', true, 200);
-				}
-				#this control doesn't seem to matter
-				#header("Cache-control: public"); //required for If-Modified-Since header to exist from browser
+        // 404 Not Found
+        $this->notFound();
+    }
 
-				header("Content-length: $size");
+    /**
+     * Get mimetype of a file
+     * @param  string $file full path to file
+     * @return string
+     */
+    private function mimetype($file)
+    {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mimetype = strtolower(finfo_file($finfo, $file));
+        finfo_close($finfo);
 
-				// Trick PHP into thinking this page is done, so it unlocks the session file to allow for further site navigation and downloading
-				session_write_close();
+        // Override, php does not find these mimes correctly
+        // Sometimes complex html is seen as text/c-c++
+        $ext = strtolower(pathinfo($file)['extension']);
+        if ($ext == 'css') {
+            return 'text/css';
+        } elseif ($ext == 'js') {
+            return 'application/javascript';
+        } elseif ($ext == 'html' || $ext == 'htm') {
+            return 'text/html';
+        }
 
-				// Return file content
-				readfile($file); // reads directly to output buffer, faster than file_get_contents which reads into variable first
-				exit();
+        return $mimetype;
+    }
 
-			}
+    /**
+     * Set 304 Not Modified header and exit
+     */
+    private function notModified()
+    {
+        header('HTTP/1.1 304 Not Modified');
+        exit();
+    }
 
-		}
-
-		// 404 Not Found
-		$this->notFound();
-	}
-
-	/**
-	 * Get mimetype of a file
-	 * @param  string $file full path to file
-	 * @return string
-	 */
-	private function mimetype($file)
-	{
-		$finfo = finfo_open(FILEINFO_MIME_TYPE);
-		$mimetype = strtolower(finfo_file($finfo, $file));
-		finfo_close($finfo);
-
-		// Override, php does not find these mimes correctly
-		// Sometimes complex html is seen as text/c-c++
-		$ext = strtolower(pathinfo($file)['extension']);
-		if ($ext == 'css') {
-			return 'text/css';
-		} elseif ($ext == 'js') {
-			return 'application/javascript';
-		} elseif ($ext == 'html' || $ext == 'htm') {
-			return 'text/html';
-		}
-
-		return $mimetype;
-	}
-
-	/**
-	 * Set 304 Not Modified header and exit
-	 */
-	private function notModified()
-	{
-		header('HTTP/1.1 304 Not Modified');
-		exit();
-	}
-
-	/**
-	 * Set 404 Not Found header and exit
-	 */
-	private function notFound()
-	{
-		header("HTTP/1.0 404 Not Found");
-		exit();
-	}
+    /**
+     * Set 404 Not Found header and exit
+     */
+    private function notFound()
+    {
+        header("HTTP/1.0 404 Not Found");
+        exit();
+    }
 }
