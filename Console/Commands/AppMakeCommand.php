@@ -75,9 +75,9 @@ class AppMakeCommand extends Command
         exec("mv $path/Facades/Appstub.php $path/Facades/".studly_case($this->package).".php");
         exec("mv $path/Config/appstub.php $path/Config/$this->package.php");
 
-        // Composer update
-        exec("cd $path && composer update");
-        exec("cd $path && composer dump-autoload -o");
+        // Composer update (no, we use componet path repo now, so no app composer needed)
+        #exec("cd $path && composer update");
+        #exec("cd $path && composer dump-autoload -o");
     }
 
     protected function replace($file)

@@ -14,6 +14,10 @@ class Assets
         // Define asset paths
         $paths = [];
 
+        // Get modules defined in config/modules.php
+        $config = require "$basePath/config/modules.php";
+        $modules = $config['modules'];
+
         if (substr($uri, 0, 4) == '/app') {
             // Load css from an mrcore application
             if (count($segments) >= 4) {
@@ -21,23 +25,15 @@ class Assets
                 $package = $segments[3];
                 $uri = substr($uri, strpos($uri, "$vendor/$package") + strlen("$vendor/$package"));
 
-                // Check for app in ../Apps first for dev override, then vendor
-                // Try Public folders first, if none, try Assets folder...try in both app and vendor folders
-                if (!$path = realpath("$basePath/../Apps/".$this->studly($vendor)."/".$this->studly($package)."/Public")) {
-                    if (!$path = realpath("$basePath/../Apps/".$this->studly($vendor)."/".$this->studly($package)."/Assets")) {
-                        if (!$path = realpath("$basePath/vendor/$vendor/$package/Public")) {
-                            $path = realpath("$basePath/vendor/$vendor/$package/Assets");
-                        }
-                    }
-                }
-                if ($path) {
-                    $paths[] = $path;
-                }
+                // Get the asset path from config/modules.php
+                $moduleName = $this->studly($vendor).'\\'.$this->studly($package);
+                $module = $modules[$moduleName];
+                $assetPath = isset($module['assets']) ? $module['assets'] : 'Assets';
+                $path = realpath("$basePath/vendor/$vendor/$package/$assetPath");
+                if ($path) $paths[] = $path;
             }
         } else {
             // Load css from module assets
-            $config = require "$basePath/config/modules.php";
-            $modules = $config['modules'];
             $assets = $config['assets'];
 
             // Always add mrcore public at the end
