@@ -7,23 +7,21 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class AppMakeCommand extends Command
 {
+    protected $name = 'App Make';
+    protected $package = 'Mrcore/Foundation';
+    protected $version = '1.0.0';
+    protected $description = 'Make a new mrcore application';
+    protected $signature = 'mrcore:foundation:app:make
+        {name : Application name in lowercase your-vendor/your-package format},
+        {--template= : Appstub template to use. See branches on https://github.com/mrcore5/appstub},
+        {--path= : Optional alternate apps path}
+    ';
 
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
-    protected $name = 'mrcore:foundation:app:make';
+    #array('template', InputOption::REQUIRED, 'Appstub template to install'),
+    #array('app', InputArgument::REQUIRED, 'App name in laravel vendor/package format'),
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Make a new mrcore application.';
-
-    protected $vendor;
-    protected $package;
+    #protected $appVendor;
+    #protected $appPackage;
 
     /**
      * Create a new command instance.
@@ -40,50 +38,70 @@ class AppMakeCommand extends Command
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
-        $app = $this->argument('app');
-        $tmp = explode('/', $app);
-        $this->vendor = $tmp[0];
-        $this->package = $tmp[1];
-
-        $path = studly_case($this->vendor)."/".studly_case($this->package);
-        $path = base_path().'/../Apps/'.$path;
-
-        if (is_dir($path)) {
-            $this->error('App already exists');
-            exit();
+        // Input
+        $name = $this->argument('name');
+        $template = $this->option('template');
+        $appBasePath = $this->option('path') ?: realpath(base_path("../Apps"));
+        if (!isset($template)) {
+            exit($this->error('You must provide a valid --template (which is a git branch on mrcore5/appstub'));
         }
 
+        // Get vendor and package name
+        list($vendor, $package) = explode('/', $name);
+
+        // Get app path
+        $path = "$appBasePath/".studly_case($vendor)."/".studly_case($package);
+        if (is_dir($path)) {
+            exit($this->error('App already exists'));
+        }
         exec("mkdir -p $path");
-        $path = realpath($path);
 
         // Git clone (and remove .git)
-        exec("cd $path && git clone --depth 1 https://github.com/mreschke/mrcore-appstub . && rm -rf .git");
+        $cmdStatus = exec("cd $path && git clone -b $template --depth 1 https://github.com/mreschke/mrcore-appstub . && rm -rf .git && echo 0");
+        if ($cmdStatus != "0") {
+            exit($this->error("Failed.  Perhaps the branch (app template) was not found.  Check https://github.com/mrcore5/appstub branches to see valid templates"));
+        }
 
         // Replace file contents
         $files = File::allFiles($path);
         foreach ($files as $file) {
-            $this->replace($file);
+            $this->replace($file, $vendor, $package);
         }
 
         // Rename files
-        exec("mv $path/Providers/AppstubServiceProvider.php $path/Providers/".studly_case($this->package)."ServiceProvider.php");
-        exec("mv $path/Database/Seeds/AppstubSeeder.php $path/Database/Seeds/".studly_case($this->package)."Seeder.php");
-        exec("mv $path/Database/Seeds/AppstubTestSeeder.php $path/Database/Seeds/".studly_case($this->package)."TestSeeder.php");
-        exec("mv $path/Http/Controllers/AppstubController.php $path/Http/Controllers/".studly_case($this->package)."Controller.php");
-        exec("mv $path/Facades/Appstub.php $path/Facades/".studly_case($this->package).".php");
-        exec("mv $path/Config/appstub.php $path/Config/$this->package.php");
+        // FIXME: these are the type of custom issues that would be better handled inside
+        // each appstub themselves, to create better standalone and self defined appstubs
+        if (str_contains($template, 'standalone')) {
+            // This is a standalone appstub with /src/ folder
+            exec("mv $path/config/appstub.php $path/config/$package.php");
+        } elseif (str_contains($template, 'src')) {
+            // This is a mrcore5 module appstub with /src/ folder
+            exec("mv $path/src/Providers/AppstubServiceProvider.php $path/src/Providers/".studly_case($package)."ServiceProvider.php");
+            exec("mv $path/config/appstub.php $path/config/$package.php");
+        } else {
+            // This is a mrcore5 module appstub with everything in root folder
+            exec("mv $path/Providers/AppstubServiceProvider.php $path/Providers/".studly_case($package)."ServiceProvider.php");
+            exec("mv $path/Database/Seeds/AppstubSeeder.php $path/Database/Seeds/".studly_case($package)."Seeder.php");
+            exec("mv $path/Database/Seeds/AppstubTestSeeder.php $path/Database/Seeds/".studly_case($package)."TestSeeder.php");
+            exec("mv $path/Http/Controllers/AppstubController.php $path/Http/Controllers/".studly_case($package)."Controller.php");
+            exec("mv $path/Facades/Appstub.php $path/Facades/".studly_case($package).".php");
+            exec("mv $path/Config/appstub.php $path/Config/$package.php");
+        }
 
         // Composer update (no, we use componet path repo now, so no app composer needed)
         #exec("cd $path && composer update");
         #exec("cd $path && composer dump-autoload -o");
     }
 
-    protected function replace($file)
+    /**
+     * Replace appstub text with proper vendor and package insde this one $file
+     */
+    protected function replace($file, $vendor, $package)
     {
-        $vendor = $this->vendor;
-        $package = $this->package;
+        $vendor = $vendor;
+        $package = $package;
         $app = "$vendor/$package";
         $path = studly_case($vendor)."/".studly_case($package);
         $namespace = studly_case($vendor)."\\\\".studly_case($package);
@@ -111,20 +129,11 @@ class AppMakeCommand extends Command
         $this->sed("appstub", $package, $file);
     }
 
+    /**
+     * Run linux sed command to search and replace inside a file
+     */
     protected function sed($search, $replace, $file)
     {
         exec("sed -i 's`$search`$replace`g' $file");
-    }
-
-    /**
-     * Get the console command arguments.
-     *
-     * @return array
-     */
-    protected function getArguments()
-    {
-        return array(
-            array('app', InputArgument::REQUIRED, 'App name in laravel vendor/package format'),
-        );
     }
 }

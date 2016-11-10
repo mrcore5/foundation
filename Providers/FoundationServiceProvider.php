@@ -253,7 +253,7 @@ class FoundationServiceProvider extends ServiceProvider
     {
         // Register global middleware
         $kernel->pushMiddleware(\Mrcore\Foundation\Http\Middleware\LoadModules::class);
-        
+
         // Register route based middleware
         #$router->middleware('auth.appstub', 'Mrcore\Appstub\Http\Middleware\Authenticate');
     }
