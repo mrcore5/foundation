@@ -342,32 +342,14 @@ class AppCommand extends Command
     {
         // Make file
         $name = $params[0];
+        $queued = isset($params[1]) ? $params[1] : null;
+        $makeOptions = ['--event' => 'SomeEvent'];
+        if ($queued == 'queued') {
+            $makeOptions['--queued'] = true;
+        }
         $path = $this->path.'/'.$this->paths['psr4']."/Listeners";
         $laravelFile = app_path('Listeners/MrcoreStubFile.php');
-        $file = $this->make('listener', $name, $path, $laravelFile, [
-            '--event' => 'SomeEvent'
-        ]);
-
-        // Search and replace content
-        $ns = str_replace("\\", "\\\\\\", $this->ns);
-        $this->sed("App\\\\Listeners", "$ns\\\\Listeners", $file);
-        $this->sed("App\\\\Events", "$ns\\\\Events", $file);
-        $this->sed("MrcoreStubFile", $name, $file);
-    }
-
-    /**
-     * Make queued listener
-     */
-    protected function makeListenerQueued($params)
-    {
-        // Make file
-        $name = $params[0];
-        $path = $this->path.'/'.$this->paths['psr4']."/Listeners";
-        $laravelFile = app_path('Listeners/MrcoreStubFile.php');
-        $file = $this->make('listener', $name, $path, $laravelFile, [
-            '--event' => 'SomeEvent',
-            '--queued' => true,
-        ]);
+        $file = $this->make('listener', $name, $path, $laravelFile, $makeOptions);
 
         // Search and replace content
         $ns = str_replace("\\", "\\\\\\", $this->ns);
@@ -622,7 +604,8 @@ class AppCommand extends Command
         $this->line('    Example: make:job SomeJob');
         $this->line('    Example: make:job SomeSyncJob sync');
         $this->info('  make:listener                  Create a new event listener class');
-        $this->info('  make:listener-queued           Create a new queued event listener class');
+        $this->line('    Example: make:listener SomeListener');
+        $this->line('    Example: make:listener SomeListener queued');
         $this->info('  make:mail                      Create a new email class');
         $this->info('  make:middleware                Create a new middleware class');
         $this->info('  make:migration                 Create a new migration file');
