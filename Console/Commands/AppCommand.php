@@ -331,7 +331,7 @@ class AppCommand extends Command
 
         // Search and replace content
         $ns = str_replace("\\", "\\\\\\", $this->ns);
-        $this->sed("App\\\\Events", "$ns\\\\Events", $file);
+        $this->sed("App\\\\Jobs", "$ns\\\\Jobs", $file);
         $this->sed("MrcoreStubFile", $name, $file);
     }
 
@@ -406,7 +406,7 @@ class AppCommand extends Command
         if ($action == 'create') {
             // Create new table
             $this->call('make:migration', [
-                'name' => "create_${table}_".$this->name,
+                'name' => "create_${table}_".$this->app,
                 '--path' => $this->relativePath.'/'.$this->paths['migrations'],
                 '--create' => $table
             ]);
@@ -414,7 +414,7 @@ class AppCommand extends Command
             // Update table add column
             $column = $params[2];
             $this->call('make:migration', [
-                'name' => "update_${table}_add_${column}_".$this->name,
+                'name' => "update_${table}_add_${column}_".$this->app,
                 '--path' => $this->relativePath.'/'.$this->paths['migrations'],
                 '--table' => $table
             ]);
@@ -502,7 +502,7 @@ class AppCommand extends Command
     protected function makeSeeder($params)
     {
         // Make file
-        $name = studly_case($this->name).$params[0];
+        $name = studly_case($this->app).$params[0];
         $path = $this->path.'/'.$this->paths['seeds'];
         $laravelFile = base_path('database/seeds/MrcoreStubFile.php');
         $file = $this->make('seeder', $name, $path, $laravelFile, []);

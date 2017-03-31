@@ -207,9 +207,9 @@ class Layout
 
     public function container($container = true, $headerContainer = true, $footerContainer = true)
     {
-        $container = ($container ? 'container' : 'no-container');
-        $headerContainer = ($headerContainer ? 'container' : 'no-container');
-        $footerContainer = ($footerContainer ? 'container' : 'no-container');
+        $container = ($container ? 'container' : 'container-fluid');
+        $headerContainer = ($headerContainer ? 'container' : 'container-fluid');
+        $footerContainer = ($footerContainer ? 'container' : 'container-fluid');
         View::share('container', $container);
         View::share('headerContainer', $headerContainer);
         View::share('footerContainer', $footerContainer);
