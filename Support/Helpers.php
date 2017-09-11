@@ -1,5 +1,6 @@
 <?php
 
+use Mreschke\Helpers\Date;
 use Mreschke\Helpers\Other;
 use Illuminate\Support\Collection;
 use Symfony\Component\Console\Helper\Table;
@@ -155,6 +156,58 @@ if (! function_exists('value')) {
             }
         } elseif ($numArts == 3) {
         }
+    }
+}
+
+
+if (! function_exists('perf________________________________________________________________')) {
+    /**
+     * Start and stop millisecond timer per item for debug timing and performance
+     * @return void
+     */
+    function perf________________________________________________________________($item, $desc = null)
+    {
+        // Get laravels IoC container for singleton like array storage :)
+        $app = app();
+
+        // Do not debug in production
+        if ($app->environment('production')) return;
+
+        // Get symfony console
+        $output = new ConsoleOutput();
+
+        // Reset items
+        if ($item == 'reset') {
+            $app->instance('perfItems', []);
+            $output->writeln("<fg=black;bg=red>".str_repeat('-', 80)."</>");
+            return;
+        }
+
+        // Create empty perfItems if never bound
+        if (!$app->bound('perfItems')) $app->instance('perfItems', []);
+
+        // Get perfItems instance
+        $perfItems = $app->make('perfItems');
+
+        if (!isset($perfItems['indent'])) $perfItems['indent'] = 0;
+
+        // All 'time' is in milliseconds
+        if (!isset($perfItems[$item])) {
+            // New item, start time
+            $perfItems[$item]['start'] = Date::date('Uu');
+            $perfItems[$item]['desc'] = $desc;
+            #$output->writeln(str_repeat(' ', $perfItems['indent'] * 2)."<fg=green>*</> <fg=green>Beg: ".$perfItems[$item]['desc']."</>");
+            $perfItems['indent'] += 1;
+        } else {
+            // Item already found, stop time
+            $perfItems['indent'] -= 1;
+            $perfItems[$item]['stop'] = Date::date('Uu');
+            $perfItems[$item]['time'] = $perfItems[$item]['stop'] - $perfItems[$item]['start'];
+            $output->writeln(str_repeat(' ', $perfItems['indent'] * 2)."<fg=green>*</> <fg=white;options=bold>End: ".$perfItems[$item]['desc']."</> = <fg=red>".$perfItems[$item]['time']."ms</>");
+        }
+
+        // Store back to IoC
+        $app->instance('perfItems', $perfItems);
     }
 }
 

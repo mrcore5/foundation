@@ -7,6 +7,10 @@ use Exception;
 use InvalidArgumentException;
 use Illuminate\Console\Command;
 
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+
+
 /**
  * Mrcore app/module helper command
  * @copyright 2015 Matthew Reschke
@@ -565,7 +569,23 @@ class AppCommand extends Command
             // Adding a filter`
             $filter = "--filter=$params[0]";
         }
-        passthru("cd ".base_path()." && phpunit $filter ".$this->path."/".$this->paths['tests']."/");
+
+
+
+
+        $process = new Process("cd ".base_path()." && ./vendor/bin/phpunit $filter ".$this->path."/".$this->paths['tests']."/");
+        $process->run();
+
+        // executes after the command finishes
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        echo $process->getOutput();
+
+
+
+        #passthru("cd ".base_path()." && ./vendor/bin/phpunit $filter ".$this->path."/".$this->paths['tests']."/");
     }
 
     /**
@@ -575,7 +595,7 @@ class AppCommand extends Command
     protected function testPlay($action = 'play')
     {
         $params = implode(' ', $this->argument('parameters'));
-        passthru("cd ".base_path()." && phpunit ".$this->path."/".$this->paths['tests']."/ $action $params");
+        passthru("cd ".base_path()." && ./vendor/bin/phpunit ".$this->path."/".$this->paths['tests']."/ $action $params");
     }
 
     /**
