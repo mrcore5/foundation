@@ -179,7 +179,7 @@ if (! function_exists('perf_____________________________________________________
         // Reset items
         if ($item == 'reset') {
             $app->instance('perfItems', []);
-            $output->writeln("<fg=black;bg=red>".str_repeat('-', 80)."</>");
+            $output->writeln("<fg=black;bg=magenta>".str_repeat('-', 80)."</>");
             return;
         }
 
@@ -192,18 +192,25 @@ if (! function_exists('perf_____________________________________________________
         if (!isset($perfItems['indent'])) $perfItems['indent'] = 0;
 
         // All 'time' is in milliseconds
+        if ($perfItems['indent'] < 0) $perfItems['indent'] = 0;
         if (!isset($perfItems[$item])) {
             // New item, start time
             $perfItems[$item]['start'] = Date::date('Uu');
             $perfItems[$item]['desc'] = $desc;
-            #$output->writeln(str_repeat(' ', $perfItems['indent'] * 2)."<fg=green>*</> <fg=green>Beg: ".$perfItems[$item]['desc']."</>");
+            #$output->writeln(str_repeat(' ', $perfItems['indent'] * 2)."<fg=green>*</> <fg=green>".$perfItems[$item]['desc']." {</>");
+            $output->writeln(str_repeat(' ', $perfItems['indent'] * 4)."<fg=blue>".$perfItems[$item]['desc']."</> {");
             $perfItems['indent'] += 1;
         } else {
             // Item already found, stop time
             $perfItems['indent'] -= 1;
             $perfItems[$item]['stop'] = Date::date('Uu');
             $perfItems[$item]['time'] = $perfItems[$item]['stop'] - $perfItems[$item]['start'];
-            $output->writeln(str_repeat(' ', $perfItems['indent'] * 2)."<fg=green>*</> <fg=white;options=bold>End: ".$perfItems[$item]['desc']."</> = <fg=red>".$perfItems[$item]['time']."ms</>");
+            #$output->writeln(str_repeat(' ', $perfItems['indent'] * 2)."<fg=green>*</> Perf: <fg=white;options=bold>".$perfItems[$item]['desc']."</> = <fg=red>".$perfItems[$item]['time']."ms</>");
+
+            $output->writeln(str_repeat(' ', $perfItems['indent'] * 4)."} <fg=yellow>".$perfItems[$item]['time']."ms</>");
+
+            #$output->writeln(str_repeat(' ', ($perfItems['indent'] * 4) + 4)."= <fg=red>".$perfItems[$item]['time']."ms</>");
+            #$output->writeln(str_repeat(' ', $perfItems['indent'] * 4)."}");
         }
 
         // Store back to IoC
