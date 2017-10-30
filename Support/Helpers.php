@@ -173,6 +173,9 @@ if (! function_exists('perf_____________________________________________________
         // Do not debug in production
         if ($app->environment('production')) return;
 
+        // Do not debug if disabled in .env file
+        if (env('MRCORE_FOUNDATION_PERF_DISABLED') == true) return;
+
         // Get symfony console
         $output = new ConsoleOutput();
 
