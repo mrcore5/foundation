@@ -7,13 +7,12 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class InstallCommand extends Command
 {
-
     /**
-     * The console command name.
+     * The name and signature of the console command.
      *
      * @var string
      */
-    protected $name = 'mrcore:foundation:install';
+    protected $signature = 'mrcore:foundation:install';
 
     /**
      * The console command description.
@@ -21,9 +20,6 @@ class InstallCommand extends Command
      * @var string
      */
     protected $description = 'Install and setup mrcore foundation.';
-
-    protected $vendor;
-    protected $package;
 
     /**
      * Create a new command instance.
@@ -40,13 +36,13 @@ class InstallCommand extends Command
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         $this->info('Installing mrcore/foundation');
 
-        $autoload = base_path('bootstrap/autoload.php');
-        $autoloadContents = file_get_contents($autoload);
-        if (str_contains($autoloadContents, "Mrcore Foundation")) {
+        $bootstrapFile = base_path('bootstrap/app.php');
+        $bootstrapContents = file_get_contents($bootstrapFile);
+        if (str_contains($bootstrapContents, "Mrcore Foundation")) {
             // Already installed asset manager
             $this->error("Foundation has already been installed!");
             exit();
@@ -56,9 +52,17 @@ class InstallCommand extends Command
         $this->info("* Publishing Modules config");
         passthru('php artisan vendor:publish --tag mrcore.modules.configs');
 
-        // Removing main routes.php
-        $this->info("* Removing laravels routes.php");
-        $routes = base_path('app/Http/routes.php');
+        // Removing routes/web.php
+        $this->info("* Removing laravels routes/web.php");
+        $routes = base_path('routes/web.php');
+        if (file_exists($routes)) {
+            exec("rm -rf $routes");
+            file_put_contents($routes, "<?php // Emptied by mrcore/foundation installer");
+        }
+
+        // Removing routes/api.php
+        $this->info("* Removing laravels routes/api.php");
+        $routes = base_path('routes/api.php');
         if (file_exists($routes)) {
             exec("rm -rf $routes");
             file_put_contents($routes, "<?php // Emptied by mrcore/foundation installer");
@@ -91,7 +95,8 @@ class InstallCommand extends Command
         // you can get whopps back perfectly.
 
         // Install Bootstrap
-        $bootstrapSearch = "define('LARAVEL_START', microtime(true));";
+        #$bootstrapSearch = "define('LARAVEL_START', microtime(true));";
+        $bootstrapSearch = "<?php";
         $bootstrapReplace = "$bootstrapSearch
 
 /*
@@ -112,9 +117,9 @@ if (file_exists(\"\$basePath/vendor/mrcore/foundation/Bootstrap/Start.php\")) {
     require \"\$basePath/../Modules/Foundation/Bootstrap/Start.php\";
 }";
 
-        $this->info("* Installing Bootstrap to ./bootstrap/autoload.php");
-        $autoloadContents = str_replace($bootstrapSearch, $bootstrapReplace, $autoloadContents);
-        file_put_contents($autoload, $autoloadContents);
+        $this->info("* Installing Bootstrap to ./bootstraap/app.php");
+        $bootstrapContents = str_replace($bootstrapSearch, $bootstrapReplace, $bootstrapContents);
+        file_put_contents($bootstrapFile, $bootstrapContents);
 
         // Done
         $this->info('Installation complete!');

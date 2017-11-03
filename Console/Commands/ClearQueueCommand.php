@@ -7,13 +7,12 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class ClearQueueCommand extends Command
 {
-
     /**
-     * The console command name.
+     * The name and signature of the console command.
      *
      * @var string
      */
-    protected $name = 'mrcore:foundation:queue:clear';
+    protected $signature = 'mrcore:foundation:queue:clear';
 
     /**
      * The console command description.
@@ -37,7 +36,7 @@ class ClearQueueCommand extends Command
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         $connection = config('queue.default');
         $this->info("Deleting all jobs from $connection queue");

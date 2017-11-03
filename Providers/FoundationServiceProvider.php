@@ -103,6 +103,12 @@ class FoundationServiceProvider extends ServiceProvider
         $facade = AliasLoader::getInstance();
         $facade->alias('Module', 'Mrcore\Foundation\Facades\Module');
         $facade->alias('Layout', 'Mrcore\Foundation\Facades\Layout');
+
+        // Backward compatibility
+        $facade->alias('Form', \Collective\Html\FormFacade::class);
+        $facade->alias('Html', \Collective\Html\HtmlFacade::class);
+        $facade->alias('Input', \Illuminate\Support\Facades\Input::class);
+
         #class_alias('Some\Long\Class', 'Short');
     }
 
@@ -132,7 +138,11 @@ class FoundationServiceProvider extends ServiceProvider
         #$this->app->singleton(\Mrcore\Appstub\Appstub::class, \Mrcore\Appstub::class)
 
         // Register UrlServiceProvider (laravel override) for mreschke https ssl termination fix
-        $this->app->register(\Mrcore\Foundation\Providers\UrlServiceProvider::class);
+        // FIXME, revisit, failing in laravel 5.5, still needed???
+        #$this->app->register(\Mrcore\Foundation\Providers\UrlServiceProvider::class);
+
+        // Backward compatibility
+        $this->app->register(\Collective\Html\HtmlServiceProvider::class);
     }
 
     /**
