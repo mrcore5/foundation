@@ -138,6 +138,9 @@ class FoundationServiceProvider extends ServiceProvider
 
         // Register UrlServiceProvider (laravel override) for mreschke https ssl termination fix
         $this->app->register(\Mrcore\Foundation\Providers\UrlServiceProvider::class);
+
+        // Register other service providers
+        $this->app->register(\Collective\Html\HtmlServiceProvider::class);
     }
 
     /**
