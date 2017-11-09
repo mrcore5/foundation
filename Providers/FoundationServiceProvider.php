@@ -104,6 +104,11 @@ class FoundationServiceProvider extends ServiceProvider
         $facade->alias('Module', 'Mrcore\Foundation\Facades\Module');
         $facade->alias('Layout', 'Mrcore\Foundation\Facades\Layout');
         #class_alias('Some\Long\Class', 'Short');
+
+        // Backward compatibility
+        $facade->alias('Form', \Collective\Html\FormFacade::class);
+        $facade->alias('Html', \Collective\Html\HtmlFacade::class);
+        $facade->alias('Input', \Illuminate\Support\Facades\Input::class);
     }
 
     /**
