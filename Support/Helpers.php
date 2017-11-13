@@ -167,14 +167,12 @@ if (! function_exists('perf_____________________________________________________
      */
     function perf________________________________________________________________($item, $desc = null)
     {
+        // Do not debug if disabled in .env file
+        // Override temp in code with putenv('MRCORE_FOUNDATION_PERF_DISABLED=false');
+        if (env('MRCORE_FOUNDATION_PERF_DISABLED') == true) return;
+
         // Get laravels IoC container for singleton like array storage :)
         $app = app();
-
-        // Do not debug in production
-        if ($app->environment('production')) return;
-
-        // Do not debug if disabled in .env file
-        if (env('MRCORE_FOUNDATION_PERF_DISABLED') == true) return;
 
         // Get symfony console
         $output = new ConsoleOutput();
@@ -206,6 +204,7 @@ if (! function_exists('perf_____________________________________________________
         } else {
             // Item already found, stop time
             $perfItems['indent'] -= 1;
+            if ($perfItems['indent'] < 0) $perfItems['indent'] = 0;
             $perfItems[$item]['stop'] = Date::date('Uu');
             $perfItems[$item]['time'] = $perfItems[$item]['stop'] - $perfItems[$item]['start'];
             #$output->writeln(str_repeat(' ', $perfItems['indent'] * 2)."<fg=green>*</> Perf: <fg=white;options=bold>".$perfItems[$item]['desc']."</> = <fg=red>".$perfItems[$item]['time']."ms</>");
