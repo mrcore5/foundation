@@ -10,11 +10,11 @@ class AppMakeCommand extends Command
     protected $name = 'App Make';
     protected $package = 'Mrcore/Foundation';
     protected $version = '1.0.0';
-    protected $description = 'Make a new mrcore application';
+    protected $description = "Make a new mrcore application.\nUse lower case full-vendor/app-name syntax (namespace will be FullVendor\AppName)\nExample: ./artisan mrcore:foundation:app:make smith/app --template=mrcore5-src --path=~/Code/smith/app";
     protected $signature = 'mrcore:foundation:app:make
         {name : Application name in lowercase your-vendor/your-package format},
         {--template= : Appstub template to use. See branches on https://github.com/mrcore5/appstub},
-        {--path= : Optional alternate apps path}
+        {--path= : Full path including vendor/package (ex ~/Code/vendor/package}
     ';
 
     #array('template', InputOption::REQUIRED, 'Appstub template to install'),
@@ -43,56 +43,79 @@ class AppMakeCommand extends Command
         // Input
         $name = $this->argument('name');
         $template = $this->option('template');
-        $appBasePath = $this->option('path') ?: realpath(base_path("../Apps"));
-        if (!isset($template)) {
-            exit($this->error('You must provide a valid --template (which is a git branch on mrcore5/appstub'));
-        }
+        $path = $this->option('path');
+
+        // Required
+        if (!isset($template)) exit($this->error('You must provide a valid --template (which is a git branch on mrcore5/appstub'));
+        if (!isset($path)) exit($this->error('You must provide a full valid --path which includes the vendor/package, ex: ~/Code/vendor/package'));
+
+        // Convert ~ to actual home directory of user running this command
+        if (str_contains($path, '~')) {
+            $path = str_replace('~', env('HOME'), $path);
+        };
+
+        // Confirm
+        if (!$this->confirm("Create mrcore application named $name using template $template with root folder $path")) exit('No. Cancelled');
 
         // Get vendor and package name
         list($vendor, $package) = explode('/', $name);
 
-        // Get app path
-        $path = "$appBasePath/".studly_case($vendor)."/".studly_case($package);
-        if (is_dir($path)) {
-            exit($this->error('App already exists'));
-        }
+        // Create path
+        if (is_dir($path)) exit($this->error('App already exists'));
+        $this->info("Creating path $path");
         exec("mkdir -p $path");
 
         // Git clone (and remove .git)
-        $cmdStatus = exec("cd $path && git clone -b $template --depth 1 https://github.com/mreschke/mrcore-appstub . && rm -rf .git && echo 0");
+        $gitUrl = "https://github.com/mreschke/mrcore-appstub";
+        $this->info("Git clone branch $template from $gitUrl into $path");
+        $cmdStatus = exec("cd $path && git clone -b $template --depth 1 $gitUrl . && rm -rf .git && echo 0");
         if ($cmdStatus != "0") {
             exit($this->error("Failed.  Perhaps the branch (app template) was not found.  Check https://github.com/mrcore5/appstub branches to see valid templates"));
         }
 
         // Replace file contents
+        $this->info("Search and replace stubs in new project folder");
         $files = File::allFiles($path);
         foreach ($files as $file) {
+            $this->info("Search and replace file $file");
             $this->replace($file, $vendor, $package);
         }
 
         // Rename files
         // FIXME: these are the type of custom issues that would be better handled inside
         // each appstub themselves, to create better standalone and self defined appstubs
+        $this->info("Renaming files");
         if (str_contains($template, 'standalone')) {
             // This is a standalone appstub with /src/ folder
-            exec("mv $path/config/appstub.php $path/config/$package.php");
+            $this->rename("$path/config/appstub.php", "$path/config/$package.php");
         } elseif (str_contains($template, 'src')) {
             // This is a mrcore5 module appstub with /src/ folder
-            exec("mv $path/src/Providers/AppstubServiceProvider.php $path/src/Providers/".studly_case($package)."ServiceProvider.php");
-            exec("mv $path/config/appstub.php $path/config/$package.php");
+            $this->rename("$path/src/Providers/AppstubServiceProvider.php", "$path/src/Providers/".studly_case($package)."ServiceProvider.php");
+            $this->rename("$path/config/appstub.php", "$path/config/$package.php");
         } else {
             // This is a mrcore5 module appstub with everything in root folder
-            exec("mv $path/Providers/AppstubServiceProvider.php $path/Providers/".studly_case($package)."ServiceProvider.php");
-            exec("mv $path/Database/Seeds/AppstubSeeder.php $path/Database/Seeds/".studly_case($package)."Seeder.php");
-            exec("mv $path/Database/Seeds/AppstubTestSeeder.php $path/Database/Seeds/".studly_case($package)."TestSeeder.php");
-            exec("mv $path/Http/Controllers/AppstubController.php $path/Http/Controllers/".studly_case($package)."Controller.php");
-            exec("mv $path/Facades/Appstub.php $path/Facades/".studly_case($package).".php");
-            exec("mv $path/Config/appstub.php $path/Config/$package.php");
+            $this->rename("$path/Providers/AppstubServiceProvider.php", "$path/Providers/".studly_case($package)."ServiceProvider.php");
+            $this->rename("$path/Database/Seeds/AppstubSeeder.php", "$path/Database/Seeds/".studly_case($package)."Seeder.php");
+            $this->rename("$path/Database/Seeds/AppstubTestSeeder.php", "$path/Database/Seeds/".studly_case($package)."TestSeeder.php");
+            $this->rename("$path/Http/Controllers/AppstubController.php", "$path/Http/Controllers/".studly_case($package)."Controller.php");
+            $this->rename("$path/Facades/Appstub.php", "$path/Facades/".studly_case($package).".php");
+            $this->rename("$path/Config/appstub.php", "$path/Config/$package.php");
         }
 
         // Composer update (no, we use componet path repo now, so no app composer needed)
         #exec("cd $path && composer update");
         #exec("cd $path && composer dump-autoload -o");
+
+        $this->info("Done!");
+    }
+
+    /**
+     * Rename file
+     */
+    protected function rename($old, $new)
+    {
+        $this->info("Renaming $old => $new");
+        exec("mv $old $new");
     }
 
     /**
