@@ -28,8 +28,13 @@ class Assets
                 // Get the asset path from config/modules.php
                 $moduleName = $this->studly($vendor).'\\'.$this->studly($package);
                 $module = $modules[$moduleName];
+                // Try Assets folder
                 $assetPath = isset($module['assets']) ? $module['assets'] : 'Assets';
-                $path = realpath("$basePath/vendor/$vendor/$package/$assetPath");
+                if (!$path = realpath("$basePath/vendor/$vendor/$package/$assetPath")) {
+                    // Try public folder
+                    $assetPath = isset($module['assets']) ? $module['assets'] : 'public';
+                    $path = realpath("$basePath/vendor/$vendor/$package/$assetPath");
+                }
                 if ($path) $paths[] = $path;
             }
         } else {
