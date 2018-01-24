@@ -27,7 +27,8 @@ class Assets
 
                 // Get the asset path from config/modules.php
                 $moduleName = $this->studly($vendor).'\\'.$this->studly($package);
-                $module = $modules[$moduleName];
+                $module = isset($modules[$moduleName]) ? $modules[$moduleName] : null;
+
                 // Try Assets folder
                 $assetPath = isset($module['assets']) ? $module['assets'] : 'Assets';
                 if (!$path = realpath("$basePath/vendor/$vendor/$package/$assetPath")) {
