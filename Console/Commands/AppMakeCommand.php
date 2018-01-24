@@ -91,6 +91,7 @@ class AppMakeCommand extends Command
         } elseif (str_contains($template, 'src')) {
             // This is a mrcore5 module appstub with /src/ folder
             $this->rename("$path/src/Providers/AppstubServiceProvider.php", "$path/src/Providers/".studly_case($package)."ServiceProvider.php");
+            $this->rename("$path/src/Http/Controllers/AppstubController.php", "$path/src/Http/".studly_case($package)."Controller.php");
             $this->rename("$path/config/appstub.php", "$path/config/$package.php");
         } else {
             // This is a mrcore5 module appstub with everything in root folder
