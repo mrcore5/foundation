@@ -15,9 +15,6 @@
             "homepage": "http://mreschke.com"
         }
     ],
-    "require": {
-        "laravelcollective/html": "5.3"
-    },
     "autoload": {
         "psr-4": {
             "Mrcore\\Foundation\\": ""
