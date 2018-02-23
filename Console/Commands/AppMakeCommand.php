@@ -7,10 +7,11 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class AppMakeCommand extends Command
 {
+    // Example: ./artisan mrcore:foundation:app:make smith/app --template=mrcore5-src --path=~/Code/smith/app
     protected $name = 'App Make';
     protected $package = 'Mrcore/Foundation';
     protected $version = '1.0.0';
-    protected $description = "Make a new mrcore application.\nUse lower case full-vendor/app-name syntax (namespace will be FullVendor\AppName)\nExample: ./artisan mrcore:foundation:app:make smith/app --template=mrcore5-src --path=~/Code/smith/app";
+    protected $description = "Make a new mrcore application.";
     protected $signature = 'mrcore:foundation:app:make
         {name : Application name in lowercase your-vendor/your-package format},
         {--template= : Appstub template to use. See branches on https://github.com/mrcore5/appstub},

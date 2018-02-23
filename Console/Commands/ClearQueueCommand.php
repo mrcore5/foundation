@@ -7,20 +7,11 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class ClearQueueCommand extends Command
 {
-
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
-    protected $name = 'mrcore:foundation:queue:clear';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Delete the entire default queue.';
+    protected $name = 'Clear Laravel Queue';
+    protected $package = 'Mrcore\Foundation';
+    protected $version = '1.0.0';
+    protected $description = 'Delete the entire default queue';
+    protected $signature = 'mrcore:foundation:queue:clear';
 
     /**
      * Create a new command instance.
@@ -37,7 +28,7 @@ class ClearQueueCommand extends Command
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
         $connection = config('queue.default');
         $this->info("Deleting all jobs from $connection queue");
