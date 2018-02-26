@@ -8,7 +8,12 @@ class Assets
         $uri = strtok($uri, '?');
 
         // Remove leading /assets
-        $uri = substr($uri, 7); //ex: /css/bootstrap.css
+        // If /fonts, leave $uri as is, we wants /fonts in there
+        if (substr($_SERVER['REQUEST_URI'], 0, 7) == '/assets') {
+            $uri = substr($uri, 7); //ex: removes /assets so URL = /css/bootstrap.css
+        }
+
+        if (substr($uri, 0, 1) != '/') $uri = '/'.$uri;
         $segments = explode("/", $uri);
 
         // Define asset paths
@@ -100,7 +105,6 @@ class Assets
         foreach ($paths as $path) {
             $file = $path.$uri;
             if (file_exists($file) && !is_dir($file)) {
-
                 // Asset file found in $path
                 $filename = pathinfo($file)['basename'];
                 $size = filesize($file);
