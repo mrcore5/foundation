@@ -137,6 +137,7 @@ class FoundationServiceProvider extends ServiceProvider
         #$this->app->singleton(\Mrcore\Appstub\Appstub::class, \Mrcore\Appstub::class)
 
         // Register UrlServiceProvider (laravel override) for mreschke https ssl termination fix
+        // FIXME in the fiture, fideloper fixed this, see https://github.com/fideloper/TrustedProxy
         $this->app->register(\Mrcore\Foundation\Providers\UrlServiceProvider::class);
 
         // Register other service providers

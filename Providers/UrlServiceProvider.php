@@ -23,6 +23,8 @@ class UrlServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        // FIXME in the fiture, fideloper fixed this, see https://github.com/fideloper/TrustedProxy
+
         // Override Laravels UrlGenerator with my own
         // Original UrlGenerator class is found in
         // vendor/laravel/framework/src/Illuminate/Routing/UrlGenerator.php

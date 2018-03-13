@@ -9,6 +9,8 @@ use Illuminate\Routing\UrlGenerator as LaravelUrlGenerator;
  */
 class UrlGenerator extends LaravelUrlGenerator
 {
+    // FIXME in the fiture, fideloper fixed this, see https://github.com/fideloper/TrustedProxy
+
     /*
     When laravel asset() helper generates full URLS it determine http:// or https:// based on
     what laravel sees as your actual schema.  The problem comes in when you use SSL termination
