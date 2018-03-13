@@ -35,7 +35,9 @@ class UrlServiceProvider extends ServiceProvider
         // But because I usually run laravel behind a loadbalancer, all requests are seen
         // internally as http.  So I have to force https if defined in my config
         // ->share means url is a singleton, same as bindShared
-        $this->app['url'] = $this->app->share(function ($app) {
+
+        #$this->app['url'] = $this->app->share(function ($app) {
+        $this->app->singleton('url', function ($app) {
             // The URL generator needs the route collection that exists on the router.
             // Keep in mind this is an object, so we're passing by references here
             // and all the registered routes will be available to the generator.

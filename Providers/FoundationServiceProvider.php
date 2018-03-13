@@ -137,8 +137,7 @@ class FoundationServiceProvider extends ServiceProvider
         #$this->app->singleton(\Mrcore\Appstub\Appstub::class, \Mrcore\Appstub::class)
 
         // Register UrlServiceProvider (laravel override) for mreschke https ssl termination fix
-        // FIXME, this broke in Laravel 5.5+...revisit...is this still needed?
-        #$this->app->register(\Mrcore\Foundation\Providers\UrlServiceProvider::class);
+        $this->app->register(\Mrcore\Foundation\Providers\UrlServiceProvider::class);
 
         // Register other service providers
         $this->app->register(\Collective\Html\HtmlServiceProvider::class);

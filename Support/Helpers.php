@@ -9,6 +9,34 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 // This file is registered first thing from Mrcore\Foundation\Bootstrap\Start
 // So we can override any Laravel Foundation/helpers.php or Support/helpers.php functions
 
+
+if (! function_exists('cnt')) {
+    /**
+     * Safe count function (mimics PHP7.1 and below count function)
+     * @param  mixed
+     * @return boolean
+     */
+    function cnt($item)
+    {
+        // PHP7.1 and below returns 0 on any number
+        if (is_null($item)) return 0;
+
+        // PHP7.1 and below returns 1 on any number
+        if (is_numeric($item)) return 1;
+
+        // PHP7.1 and below returns 1 on any string
+        if (is_string($item)) return 1;
+
+        try {
+            // Use PHP's native count
+            return count($item);
+        } catch (\Exception $e) {
+            // If its object does not impliment Countable, return 0
+            return 0;
+        }
+    }
+}
+
 if (! function_exists('asset')) {
     /**
      * Generate an asset path for the application
