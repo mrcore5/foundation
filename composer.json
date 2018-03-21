@@ -19,5 +19,12 @@
         "psr-4": {
             "Mrcore\\Foundation\\": ""
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Mrcore\\Foundation\\Providers\\FoundationServiceProvider"
+            ]
+        }
     }
 }

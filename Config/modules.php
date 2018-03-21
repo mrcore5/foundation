@@ -27,7 +27,7 @@ return [
             'namespace' => 'Mrcore\Foundation',
             'controller_namespace' => 'Mrcore\Foundation\Http\Controllers',
             'provider' => 'Mrcore\Foundation\Providers\FoundationServiceProvider',
-            'path' => ['vendor/mrcore/foundation', '../Modules/Foundation'],
+            'path' => ['vendor/mrcore/foundation'],
             'routes' => 'Http/routes.php',
         ],
 
@@ -36,7 +36,7 @@ return [
             'namespace' => 'Mrcore\Auth',
             'controller_namespace' => 'Mrcore\Auth\Http\Controllers',
             'provider' => 'Mrcore\Auth\Providers\AuthServiceProvider',
-            'path' => ['vendor/mrcore/auth', '../Modules/Auth'],
+            'path' => ['vendor/mrcore/auth'],
             'routes' => 'Http/routes.php',
             'route_prefix' => null,
             'views' => 'Views',
@@ -50,7 +50,7 @@ return [
             'namespace' => 'Mrcore\Wiki',
             'controller_namespace' => 'Mrcore\Wiki\Http\Controllers',
             'provider' => 'Mrcore\Wiki\Providers\WikiServiceProvider',
-            'path' => ['vendor/mrcore/wiki', '../Modules/Wiki'],
+            'path' => ['vendor/mrcore/wiki'],
             'routes' => 'Http/routes.php',
             'route_prefix' => null,
             'views' => 'Views',
@@ -63,7 +63,7 @@ return [
             'type' => 'module',
             'namespace' => 'Mrcore\Parser',
             'provider' => 'Mrcore\Parser\Providers\ParserServiceProvider',
-            'path' => ['vendor/mrcore/parser', '../Modules/Parser'],
+            'path' => ['vendor/mrcore/parser'],
             'enabled' => false,
         ],
 
@@ -75,7 +75,7 @@ return [
             'namespace' => 'Mrcore\Themes\Bootswatch',
             'controller_namespace' => null,
             'provider' => 'Mrcore\Themes\Bootswatch\Providers\ThemeServiceProvider',
-            'path' => ['vendor/mrcore/bootswatch-theme', '../Themes/Bootswatch'],
+            'path' => ['vendor/mrcore/bootswatch-theme'],
             'routes' => null,
             'route_prefix' => null,
             'views' => 'Views',
@@ -99,7 +99,7 @@ return [
             'namespace' => 'Mrcore\Themes\Example',
             'controller_namespace' => null,
             'provider' => 'Mrcore\Themes\Example\Providers\ThemeServiceProvider',
-            'path' => ['vendor/dynatron/example-theme', '../Themes/Example'],
+            'path' => ['vendor/dynatron/example-theme'],
             'routes' => null,
             'route_prefix' => null,
             'views' => 'Views',
@@ -116,7 +116,7 @@ return [
         'Mreschke\Helpers' => [
             'type' => 'module',
             'namespace' => 'Mreschke\Helpers',
-            'path' => ['vendor/mreschke/helpers', '../Apps/Mreschke/Helpers'],
+            'path' => ['vendor/mreschke/helpers'],
             'enabled' => false,
         ],
 
@@ -124,7 +124,7 @@ return [
             'type' => 'module',
             'namespace' => 'Mreschke\Dbal',
             'provider' => 'Mreschke\Dbal\Providers\DbalServiceProvider',
-            'path' => ['vendor/mreschke/dbal', '../Apps/Mreschke/Dbal'],
+            'path' => ['vendor/mreschke/dbal'],
             'console_only' => false,
             'enabled' => false,
         ],
@@ -132,28 +132,28 @@ return [
         'Mreschke\Repository' => [
             'type' => 'module',
             'namespace' => 'Mreschke\Repository',
-            'path' => ['vendor/mreschke/repository', '../Apps/Mreschke/Repository'],
+            'path' => ['vendor/mreschke/repository'],
         ],
 
-        'Mreschke\Mrcore4Legacy' => [
+        'Mrcore\Mrcore4Legacy' => [
             'type' => 'module',
-            'namespace' => 'Mreschke\Mrcore4Legacy',
-            'provider' => 'Mreschke\Mrcore4Legacy\Providers\Mrcore4LegacyServiceProvider',
-            'path' => ['vendor/mreschke/mrcore4-legacy', '../Apps/Mreschke/Mrcore4Legacy'],
+            'namespace' => 'Mrcore\Mrcore4Legacy',
+            'provider' => 'Mrcore\Mrcore4Legacy\Providers\Mrcore4LegacyServiceProvider',
+            'path' => ['vendor/mreschke/mrcore4-legacy'],
         ],
 
         'Mreschke\Keystone' => [
             'type' => 'module',
             'namespace' => 'Mreschke\Keystone',
             'provider' => 'Mreschke\Keystone\Providers\KeystoneServiceProvider',
-            'path' => ['vendor/mreschke/keystone', '../Apps/Mreschke/Keystone'],
+            'path' => ['vendor/mreschke/keystone'],
         ],
 
         'Mreschke\Api' => [
             'type' => 'module',
             'namespace' => 'Mreschke\Api',
             'provider' => 'Mreschke\Api\Providers\ApiServiceProvider',
-            'path' => ['vendor/mreschke/api', '../Apps/Mreschke/Api'],
+            'path' => ['vendor/mreschke/api'],
         ],
         */
 
