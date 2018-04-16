@@ -16,82 +16,54 @@ class Assets
         if (substr($uri, 0, 1) != '/') $uri = '/'.$uri;
         $segments = explode("/", $uri);
 
+        // Get modules defined in config/modules.php
+        $config = require "$basePath/config/modules.php";
+
+        // Instantiate Mrcore\Foundation\Module class
+        require "$basePath/vendor/mrcore/foundation/Support/Module.php";
+        $Module = new Module();
+        $Module->loadConfig($config);
+
         // Define asset paths
         $paths = [];
 
-        // Get modules defined in config/modules.php
-        $config = require "$basePath/config/modules.php";
-        $modules = $config['modules'];
-
+        // Loading asset from mrcore app (assets/app/mrcore/wiki/images/logo.png)
         if (substr($uri, 0, 4) == '/app') {
-            // Load css from an mrcore application
             if (count($segments) >= 4) {
                 $vendor = $segments[2];
                 $package = $segments[3];
                 $uri = substr($uri, strpos($uri, "$vendor/$package") + strlen("$vendor/$package"));
 
                 // Get the asset path from config/modules.php
-                $moduleName = $this->studly($vendor).'\\'.$this->studly($package);
-                $module = isset($modules[$moduleName]) ? $modules[$moduleName] : null;
+                $moduleName = studly_case($vendor).'\\'.studly_case($package);
 
-                // Try Assets folder
-                $assetPath = isset($module['assets']) ? $module['assets'] : 'Assets';
-                if (!$path = realpath("$basePath/vendor/$vendor/$package/$assetPath")) {
-                    // Try public folder
-                    $assetPath = isset($module['assets']) ? $module['assets'] : 'public';
-                    $path = realpath("$basePath/vendor/$vendor/$package/$assetPath");
+                // Module not found, which means we are streaming an asset from a dynamic %app% not in the module config
+                if (!$Module->exists($moduleName)) {
+                    // Dyamically load module config WITHOUT registering it (false parameter)
+                    $Module->addModule($moduleName, ['type' => 'app'], false);
                 }
-                if ($path) $paths[] = $path;
+
+                // Add modules asset path
+                $assetPath = $Module->getPath($moduleName, 'assets');
+                $paths[] = $assetPath;
             }
+
+        // Loading asset from cascading overriding list of module asset folders, first wins
         } else {
-            // Load css from module assets
+
             $assets = $config['assets'];
 
             // Always add mrcore public at the end
-            if ($path = realpath("$basePath/public")) {
-                $paths[] = $path;
-            }
+            if ($path = realpath("$basePath/public")) $paths[] = $path;
 
-            // Add module assets
-            foreach ($assets as $moduleName) {
-                if (isset($modules[$moduleName])) {
-                    $module = $modules[$moduleName];
-                    if (!isset($module['enabled']) || $module['enabled'] == true) {
-                        if (isset($module['assets'])) {
-                            // Can have multiple paths, first one wins
-                            $modulePaths = is_array($module['path']) ? $module['path'] : [$module['path']];
-                            foreach ($modulePaths as $path) {
-                                if (substr($path, 0, 1) != '/') {
-                                    $path = "$basePath/$path";
-                                } // relatove to absolute
-                                $path = "$path/$module[assets]";
-                                if ($path = realpath($path)) {
-                                    $paths[] = $path;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            // Get asset paths obeying order in modules config
+            $paths = array_merge($paths, $Module->assets());
         }
 
         // Stream asset
-        if (count($paths) > 0) {
-            $this->streamFile($uri, $paths);
-        }
+        if (count($paths) > 0) $this->streamFile($uri, $paths);
     }
 
-    /**
-     * Convert a value to studly caps case
-     * @param  string $value
-     * @return string
-     */
-    private function studly($value)
-    {
-        $value = ucwords(str_replace(array('-', '_'), ' ', $value));
-        return str_replace(' ', '', $value);
-    }
 
     /**
      * Stream first file in $paths by $uri

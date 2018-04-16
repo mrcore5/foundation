@@ -28,6 +28,7 @@ if ($runningInConsole) {
         // Building of bootstrap sass fonts sets url to /fonts and I can't see to change it to /assets/fonts
         // So this asset manager now listens to /fonts as well
         if (substr($_SERVER['REQUEST_URI'], 0, 7) == '/assets' || substr($_SERVER['REQUEST_URI'], 0, 6) == '/fonts') {
+            require __DIR__.'/../Support/AssetHelpers.php';
             require __DIR__.'/../Support/Assets.php';
             $assets = new Assets($basePath, $_SERVER['REQUEST_URI']);
             exit();

@@ -180,6 +180,9 @@ class FoundationServiceProvider extends ServiceProvider
      */
     public function registerModules()
     {
+        // Initialize modules config
+        Module::loadConfig(config('modules'));
+
         // Configure Layout (this must be here, not in boot, not in middleware)
         Module::configureThemes();
 

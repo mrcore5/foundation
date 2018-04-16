@@ -28,4 +28,21 @@ return [
     // If null, will disable any ?v= addition
     'asset_cache_version' => env('MRCORE_FOUNDATION_ASSET_CACHE_VERSION', null),
 
+    // These app paths for module and console command usage
+    'paths' => [
+        'psr4' => '',
+        'assets' => null,
+        'public' => null,
+        'config' => 'Config',
+        'database' => null,
+        'migrations' => null,
+        'factories' => null,
+        'seeds' => null,
+        'tests' => null,
+        'routes' => 'Http/routes.php',
+        'route_prefix' => null,
+        'views' => null,
+        'view_prefix' => null,
+    ],
+
 ];

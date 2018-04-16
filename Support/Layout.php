@@ -187,6 +187,7 @@ class Layout
 
     public function hideFooterbar($value = null)
     {
+        #dump("hideFooterbar($value)");
         return $this->getSet(__function__, $value);
     }
 

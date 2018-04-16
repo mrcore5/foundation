@@ -1,7 +1,7 @@
 # EditorConfig is awesome: http://EditorConfig.org
 
 # Top-most EditorConfig file
-root = false
+root = true
 
 # Global settings
 [*]
