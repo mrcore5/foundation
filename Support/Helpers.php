@@ -9,6 +9,18 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 // This file is registered first thing from Mrcore\Foundation\Bootstrap\Start
 // So we can override any Laravel Foundation/helpers.php or Support/helpers.php functions
 
+if (! function_exists('kebab_case')) {
+    /**
+     * Convert a string to kebab case.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    function kebab_case($value) {
+        // Laravel 5.5+ has kebab_case, but this is for laravel 5.4- compatibility
+        return snake_case($value, '-');
+    }
+}
 
 if (! function_exists('cnt')) {
     /**
