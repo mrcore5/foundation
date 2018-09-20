@@ -38,15 +38,15 @@ return [
         // ---------------------------------------------------------------------
         // default cerulean cosmo cyborg darkly flatly journal lumen paper
         // readable sandstone simplex slate spacelab superhero united yeti
-        'Mrcore\Themes\Bootswatch' => [
+        'Mrcore\BootswatchTheme' => [
             'type' => 'basetheme',
-            'namespace' => 'Mrcore\Themes\Bootswatch',
+            'namespace' => 'Mrcore\BootswatchTheme',
             'controller_namespace' => null,
-            'provider' => 'Mrcore\Themes\Bootswatch\Providers\ThemeServiceProvider',
+            'provider' => 'Mrcore\BootswatchTheme\Providers\BootswatchThemeServiceProvider',
             'path' => ['vendor/mrcore/bootswatch-theme'],
             'css' => [
-                'css/bootstrap/simplex.min.css',
-                'css/bootstrap/override/theme-simplex.css',
+                'css/bootstrap/default.min.css',
+                'css/bootstrap/override/theme-default.css',
                 'css/prism-light.css',
             ],
             'container' => [
@@ -93,24 +93,24 @@ return [
     'assets' => [
         '%app%',
         #'Subtheme\Example',
-        'Mrcore\Themes\Bootswatch',
-        'Mrcore\Auth',
-        'Mrcore\Wiki',
+        #'Mrcore\BootswatchTheme',
+        #'Mrcore\Auth',
+        #'Mrcore\Wiki',
 
     ],
 
     'views' => [
         '%app%',
         #'Subtheme\Example',
-        'Mrcore\Themes\Bootswatch',
-        'Mrcore\Auth',
-        'Mrcore\Wiki',
+        #'Mrcore\BootswatchTheme',
+        #'Mrcore\Auth',
+        #'Mrcore\Wiki',
     ],
 
     'routes' => [
-        'Mrcore\Wiki',
+        #'Mrcore\Wiki',
         '%app%',
-        'Mrcore\Auth',
+        #'Mrcore\Auth',
         'Mrcore\Foundation',
     ],
 

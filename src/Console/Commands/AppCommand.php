@@ -1,15 +1,12 @@
 <?php namespace Mrcore\Foundation\Console\Commands;
 
-use App;
 use File;
 use Config;
 use Exception;
 use InvalidArgumentException;
 use Illuminate\Console\Command;
-
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
-
 
 /**
  * Mrcore app/module helper command

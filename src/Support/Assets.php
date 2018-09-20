@@ -20,7 +20,7 @@ class Assets
         $config = require "$basePath/config/modules.php";
 
         // Instantiate Mrcore\Foundation\Module class
-        require "$basePath/vendor/mrcore/foundation/Support/Module.php";
+        require "$basePath/vendor/mrcore/foundation/src/Support/Module.php";
         $Module = new Module();
         $Module->loadConfig($config);
 

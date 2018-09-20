@@ -28,7 +28,7 @@ class InstallCommand extends Command
     public function handle()
     {
         $this->info("Mrcore Installation");
-        $askInstall = $this->ask("You are about to install Mrcore $this->version.".PHP_EOL." This should only be installed on a FRESH version of laravel matching the same version $this->version.".PHP_EOL." Are you sure you want to install mrcore (y/n)?");
+        $askInstall = $this->ask("You are about to install mRcore framework $this->version".PHP_EOL." This should only be installed on a FRESH version of laravel matching the same version $this->version".PHP_EOL." Are you sure you want to install mrcore (y/n)?");
         if (strtolower($askInstall) != 'y') exit('done');
 
         // Installing .editorconfig
