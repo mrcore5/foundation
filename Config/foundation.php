@@ -30,16 +30,16 @@ return [
 
     // These app paths for module and console command usage
     'paths' => [
-        'psr4' => '',
+        'psr4' => 'src',
         'assets' => null,
         'public' => null,
-        'config' => 'Config',
+        'config' => 'config',
         'database' => null,
         'migrations' => null,
         'factories' => null,
         'seeds' => null,
         'tests' => null,
-        'routes' => 'Http/routes.php',
+        'routes' => 'routes/web.php',
         'route_prefix' => null,
         'views' => null,
         'view_prefix' => null,
