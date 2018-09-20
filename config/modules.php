@@ -101,10 +101,10 @@ return [
 
     'views' => [
         '%app%',
-        #'Subtheme\Example',
-        #'Mrcore\BootswatchTheme',
         #'Mrcore\Auth',
         #'Mrcore\Wiki',
+        #'Subtheme\Example',
+        #'Mrcore\BootswatchTheme',
     ],
 
     'routes' => [
