@@ -202,7 +202,7 @@ class Module
      */
     public function all()
     {
-        return $this->config['modules'];
+        return $this->config['modules'] ?: [];
     }
 
     /**

@@ -1,9 +1,6 @@
 <?php namespace Mrcore\Foundation\Console\Commands;
 
-use Artisan;
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
 
 class ClearQueueCommand extends Command
 {

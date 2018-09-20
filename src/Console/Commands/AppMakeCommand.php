@@ -2,8 +2,6 @@
 
 use File;
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
 
 class AppMakeCommand extends Command
 {
@@ -17,12 +15,6 @@ class AppMakeCommand extends Command
         {--template= : Appstub template to use. See branches on https://github.com/mrcore5/appstub},
         {--path= : Full path including vendor/package (ex ~/Code/vendor/package}
     ';
-
-    #array('template', InputOption::REQUIRED, 'Appstub template to install'),
-    #array('app', InputArgument::REQUIRED, 'App name in laravel vendor/package format'),
-
-    #protected $appVendor;
-    #protected $appPackage;
 
     /**
      * Create a new command instance.

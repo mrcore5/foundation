@@ -25,22 +25,25 @@ return [
         // Mrcore Packages
         // ---------------------------------------------------------------------
         #'Mrcore\Appstub'         => [],
-        'Mrcore\Auth'             => [],
+        #'Mrcore\Auth'            => [],
+        #'Mrcore\Components'      => [],
         'Mrcore\Foundation'       => ['type' => 'foundation'],
-        #'Mrcore\Parser'           => [],
-        #'Mrcore\Wiki'             => [],
+        #'Mrcore\Mrcore4Legacy'   => [],
+        #'Mrcore\Parser'          => [],
+        #'Mrcore\TextWiki'        => [], // Not a mrcore module
+        #'Mrcore\Wiki'            => [],
 
 
         // Bootswatch Themes
         // ---------------------------------------------------------------------
         // default cerulean cosmo cyborg darkly flatly journal lumen paper
         // readable sandstone simplex slate spacelab superhero united yeti
-        'Mrcore\Themes\Bootswatch' => [],
+        'Mrcore\Themes\Bootswatch' => [
             'type' => 'basetheme',
             'namespace' => 'Mrcore\Themes\Bootswatch',
             'controller_namespace' => null,
             'provider' => 'Mrcore\Themes\Bootswatch\Providers\ThemeServiceProvider',
-            'path' => ['vendor/mrcore/bootswatch-theme']
+            'path' => ['vendor/mrcore/bootswatch-theme'],
             'css' => [
                 'css/bootstrap/simplex.min.css',
                 'css/bootstrap/override/theme-simplex.css',
@@ -64,11 +67,11 @@ return [
         // Mreschke Packages
         // ---------------------------------------------------------------------
         #'Mreschke\Api'           => [],
-        #'Mreschke\Dbal'           => [],
-        'Mreschke\Helpers'        => ['provider' => null],
-        #'Mreschke\Keystone'       => [],
-        #'Mreschke\Render'         => [],
-        #'Mreschke\Repository'     => [],
+        #'Mreschke\Dbal'          => [],
+        #'Mreschke\Helpers'       => ['provider' => null],
+        #'Mreschke\Keystone'      => [],
+        #'Mreschke\Render'        => [],
+        #'Mreschke\Repository'    => [],
 
     ],
 

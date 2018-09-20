@@ -1,29 +1,14 @@
 <?php namespace Mrcore\Foundation\Console\Commands;
 
-use Artisan;
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
 
 class InstallCommand extends Command
 {
-
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
-    protected $name = 'mrcore:foundation:install';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Install and setup mrcore foundation.';
-
-    protected $vendor;
-    protected $package;
+    protected $name = 'Mrcore Installer';
+    protected $package = 'Mrcore/Foundation';
+    protected $version = '5.7';
+    protected $description = 'Install mrcore foundation into a fresh laravel install.';
+    protected $signature = 'mrcore:foundation:install';
 
     /**
      * Create a new command instance.
@@ -40,59 +25,86 @@ class InstallCommand extends Command
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
-        $this->info('Installing mrcore/foundation');
+        $this->info("Mrcore Installation");
+        $askInstall = $this->ask("You are about to install Mrcore $this->version.".PHP_EOL." This should only be installed on a FRESH version of laravel matching the same version $this->version.".PHP_EOL." Are you sure you want to install mrcore (y/n)?");
+        if (strtolower($askInstall) != 'y') exit('done');
 
-        $autoload = base_path('bootstrap/autoload.php');
-        $autoloadContents = file_get_contents($autoload);
-        if (str_contains($autoloadContents, "Mrcore Foundation")) {
-            // Already installed asset manager
-            $this->error("Foundation has already been installed!");
-            exit();
-        }
+        // Installing .editorconfig
+        $this->info("* Installing .editorconfig");
+        copy(__DIR__.'/Stubs/.editorconfig', base_path('.editorconfig'));
+
+        // Installing .gitignore
+        $this->info("* Installing .gitignore");
+        copy(__DIR__.'/Stubs/.gitignore', base_path('.gitignore'));
 
         // Publish Modules config
-        $this->info("* Publishing Modules config");
+        $this->info("* Publishing Modules Config");
         passthru('php artisan vendor:publish --tag mrcore.modules.configs');
 
-        // Removing main routes.php
-        $this->info("* Removing laravels routes.php");
-        $routes = base_path('app/Http/routes.php');
-        if (file_exists($routes)) {
-            exec("rm -rf $routes");
-            file_put_contents($routes, "<?php // Emptied by mrcore/foundation installer");
-        }
+        // Making atrisan executable
+        $this->info("* Making ./artisan Executable");
+        exec("chmod a+x ".base_path('artisan'));
 
-        // Removing views
-        $this->info("* Removing laravels views");
-        $views = base_path('resources/views');
-        if (file_exists($views)) {
-            exec("rm -rf $views");
-        }
-
-        // Removing migrations
-        $this->info("* Removing laravels migrations");
+        // Removing database/migrations/*
+        $this->info("* Removing database/migrations/*");
         $migrations = base_path('database/migrations');
         if (file_exists($migrations)) {
-            exec("rm -rf $migrations");
+            exec("rm -rf $migrations/*");
         }
 
         // Removing User model
-        $this->info("* Removing user model");
+        $this->info("* Removing app/User.php model");
         $model = base_path('app/User.php');
         if (file_exists($model)) {
             exec("rm -rf $model");
         }
 
-        // Whoops Errors
-        // Never did this, but if you install whoops, then use the
-        // Handler.php stub in this Commands/InstallStubs/Exceptions/Handler.php
-        // you can get whopps back perfectly.
+        // Replace 'timezone' => 'UTC' in config/app.php with 'timezone' => env('APP_TIMEZONE', 'UTC')
+        $this->info("* Replace 'timezone' => 'UTC' in config/app.php With 'timezone' => env('APP_TIMEZONE', 'UTC')");
+        $this->sed("'timezone' => 'UTC'", "'timezone' => env('APP_TIMEZONE', 'UTC')", base_path('config/app.php'));
 
-        // Install Bootstrap
-        $bootstrapSearch = "define('LARAVEL_START', microtime(true));";
-        $bootstrapReplace = "$bootstrapSearch
+        // Replace 'cipher' => 'AES-256-CBC' in config/app.php with cipher => env('APP_CIPHER', 'AES-256-CBC')
+        $this->info("* Replace 'cipher' => 'AES-256-CBC' in config/app.php With cipher => env('APP_CIPHER', 'AES-256-CBC')");
+        $this->sed("'cipher' => 'AES-256-CBC'", "'cipher' => env('APP_CIPHER', 'AES-256-CBC')", base_path('config/app.php'));
+
+        // Replace 'queue' => 'default' in config/queue.php with 'queue' => env('QUEUE', 'default')
+        $this->info("* Replace 'queue' => 'default' in config/queue.php With 'queue' => env('QUEUE', 'default')");
+        $this->sed("'queue' => 'default'", "'queue' => env('QUEUE', 'default')", base_path('config/queue.php'));
+
+        // Install Foundation Bootstrap to ./artisan
+        $file = base_path('artisan');
+        $content = file_get_contents($file);
+        if (!str_contains($content, 'mrcore foundation')) {
+            $search = "define('LARAVEL_START', microtime(true));";
+            $replace = "$search
+
+/*
+|--------------------------------------------------------------------------
+| Mrcore Foundation
+|--------------------------------------------------------------------------
+|
+| Fire up the mrcore foundation to allow asset handling
+| and other foundation support bootstraping.
+|
+*/
+
+\$basePath = realpath(__DIR__);
+\$runningInConsole = true;
+require \"\$basePath/vendor/mrcore/foundation/src/Bootstrap/Start.php\";";
+
+            $this->info("* Installing Foundation Bootstrap to $file");
+            $content = str_replace($search, $replace, $content);
+            file_put_contents($file, $content);
+        }
+
+        // Install Foundation Bootstrap to ./public/index.php
+        $file = base_path('public/index.php');
+        $content = file_get_contents($file);
+        if (!str_contains($content, 'mrcore foundation')) {
+            $search = "define('LARAVEL_START', microtime(true));";
+            $replace = "$search
 
 /*
 |--------------------------------------------------------------------------
@@ -105,18 +117,23 @@ class InstallCommand extends Command
 */
 
 \$basePath = realpath(__DIR__.'/../');
-\$runningInConsole = php_sapi_name() == 'cli';
-if (file_exists(\"\$basePath/vendor/mrcore/foundation/Bootstrap/Start.php\")) {
-    require \"\$basePath/vendor/mrcore/foundation/Bootstrap/Start.php\";
-} else {
-    require \"\$basePath/../Modules/Foundation/Bootstrap/Start.php\";
-}";
+\$runningInConsole = false;
+require \"\$basePath/vendor/mrcore/foundation/src/Bootstrap/Start.php\";";
 
-        $this->info("* Installing Bootstrap to ./bootstrap/autoload.php");
-        $autoloadContents = str_replace($bootstrapSearch, $bootstrapReplace, $autoloadContents);
-        file_put_contents($autoload, $autoloadContents);
+            $this->info("* Installing Foundation Bootstrap to $file");
+            $content = str_replace($search, $replace, $content);
+            file_put_contents($file, $content);
+        }
 
         // Done
-        $this->info('Installation complete!');
+        $this->info(PHP_EOL.'Installation complete!  Please visit this laravel install in your browser!');
+    }
+
+    /**
+     * Run linux sed command to search and replace inside a file
+     */
+    protected function sed($search, $replace, $file)
+    {
+        exec("sed -i \"s/$search/$replace/g\" $file");
     }
 }
