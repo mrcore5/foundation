@@ -19,6 +19,34 @@ class FoundationServiceProvider extends ServiceProvider
      */
     protected $defer = false;
 
+        /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        // Register facades and class aliases
+        $this->registerFacades();
+
+        // Mrcore Module Tracking
+        // This below facaces only in Foudation becuase
+        // this is where Module:: facade comes from
+        Module::trace(get_class(), __function__);
+
+        // Register configs
+        $this->registerConfigs();
+
+        // Register services
+        $this->registerServices();
+
+        // Register testing environment
+        #$this->registerTestingEnvironment();
+
+        // Register mrcore modules
+        $this->registerModules();
+    }
+
     /**
      * Bootstrap the application services.
      *
@@ -34,6 +62,9 @@ class FoundationServiceProvider extends ServiceProvider
 
         // Load our custom macros
         require __DIR__.'/../Support/Macros.php';
+
+        // Register migrations
+        #$this->registerMigrations();
 
         // Register Policies
         #$this->registerPolicies();
@@ -60,37 +91,9 @@ class FoundationServiceProvider extends ServiceProvider
             // load as usual in Foundation/Http/Middleware/LoadModules.php!
             Module::loadViews();
         }
-    }
-
-    /**
-     * Register the service provider.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        // Register facades and class aliases
-        $this->registerFacades();
-
-        // Mrcore Module Tracking
-        // This below facaces only in Foudation becuase
-        // this is where Module:: facade comes from
-        Module::trace(get_class(), __function__);
-
-        // Register configs
-        $this->registerConfigs();
-
-        // Register services
-        $this->registerServices();
 
         // Register artisan commands
         $this->registerCommands();
-
-        // Register testing environment
-        #$this->registerTestingEnvironment();
-
-        // Register mrcore modules
-        $this->registerModules();
     }
 
     /**
@@ -122,7 +125,7 @@ class FoundationServiceProvider extends ServiceProvider
         #config(['test' => 'hi']);
 
         // Merge configs
-        $this->mergeConfigFrom(__DIR__.'/../Config/foundation.php', 'mrcore.foundation');
+        $this->mergeConfigFrom(__DIR__.'/../../config/foundation.php', 'mrcore.foundation');
     }
 
     /**
@@ -142,22 +145,6 @@ class FoundationServiceProvider extends ServiceProvider
 
         // Register other service providers
         $this->app->register(\Collective\Html\HtmlServiceProvider::class);
-    }
-
-    /**
-     * Register artisan commands.
-     * @return void
-     */
-    protected function registerCommands()
-    {
-        if (!$this->app->runningInConsole()) {
-            return;
-        }
-        $this->commands([
-            \Mrcore\Foundation\Console\Commands\ClearQueueCommand::class,
-            \Mrcore\Foundation\Console\Commands\InstallCommand::class,
-            \Mrcore\Foundation\Console\Commands\AppMakeCommand::class,
-        ]);
     }
 
     /**
@@ -205,30 +192,44 @@ class FoundationServiceProvider extends ServiceProvider
         //Layout::css('css/wiki-bundle.css');
 
         // App base path
-        $path = realpath(__DIR__.'/../');
+        $path = realpath(__DIR__.'/../../');
 
         // Config publishing rules
         // ./artisan vendor:publish --tag="mrcore.foundation.configs"
         $this->publishes([
-            "$path/Config/foundation.php" => base_path('config/mrcore/foundation.php'),
+            "$path/config/foundation.php" => base_path('config/mrcore/foundation.php'),
         ], 'mrcore.foundation.configs');
 
         // ./artisan vendor:publish --tag="mrcore.modules.configs"
         $this->publishes([
-            "$path/Config/modules.php" => base_path('config/modules.php'),
+            "$path/config/modules.php" => base_path('config/modules.php'),
         ], 'mrcore.modules.configs');
 
         /*// Migration publishing rules
         // ./artisan vendor:publish --tag="mrcore.appstub.migrations"
         $this->publishes([
-            "$path/Database/Migrations" => base_path('/database/migrations'),
+            "$path/database/migrations" => base_path('/database/migrations'),
         ], 'mrcore.appstub.migrations');
 
         // Seed publishing rules
         // ./artisan vendor:publish --tag="mrcore.appstub.seeds"
         $this->publishes([
-            "$path/Database/Seeds" => base_path('/database/seeds'),
+            "$path/database/seeds" => base_path('/database/seeds'),
         ], 'mrcore.appstub.seeds');*/
+    }
+
+    /**
+     * Register the migrations.
+     *
+     * @return void
+     */
+    protected function registerMigrations()
+    {
+        // Only applies if running in console
+        if (!$this->app->runningInConsole()) return;
+
+        // Register Migrations
+        #$this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
     }
 
     /**
@@ -263,6 +264,9 @@ class FoundationServiceProvider extends ServiceProvider
      */
     protected function registerMiddleware(Kernel $kernel, Router $router)
     {
+        // Does not apply if running in console
+        if ($this->app->runningInConsole()) return;
+
         // Register global middleware
         $kernel->pushMiddleware(\Mrcore\Foundation\Http\Middleware\LoadModules::class);
 
@@ -318,9 +322,8 @@ class FoundationServiceProvider extends ServiceProvider
      */
     protected function registerLayout($request)
     {
-        if ($this->app->runningInConsole()) {
-            return;
-        }
+        // Does not apply if running in console
+        if ($this->app->runningInConsole()) return;
 
         // Configure layout modes
         $simpleMode = $request->input('simple');
@@ -338,6 +341,23 @@ class FoundationServiceProvider extends ServiceProvider
 
         // Register additional css assets with mrcore Layout
         #Layout::css('css/wiki-bundle.css');
+    }
+
+        /**
+     * Register artisan commands.
+     * @return void
+     */
+    protected function registerCommands()
+    {
+        // Only applies if running in console
+        if (!$this->app->runningInConsole()) return;
+
+        // Register Commands
+        $this->commands([
+            \Mrcore\Foundation\Console\Commands\ClearQueueCommand::class,
+            \Mrcore\Foundation\Console\Commands\InstallCommand::class,
+            \Mrcore\Foundation\Console\Commands\AppMakeCommand::class,
+        ]);
     }
 
     /**
