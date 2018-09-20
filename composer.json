@@ -15,7 +15,7 @@
             "homepage": "http://mreschke.com"
         }
     ],
-    "requure": {
+    "require": {
         "laravelcollective/html": "5.7"
     },
     "autoload": {
