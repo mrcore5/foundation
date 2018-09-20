@@ -22,65 +22,25 @@ return [
 
     'modules' => [
 
-        'Foundation' => [
-            'type' => 'foundation',
-            'namespace' => 'Mrcore\Foundation',
-            'controller_namespace' => 'Mrcore\Foundation\Http\Controllers',
-            'provider' => 'Mrcore\Foundation\Providers\FoundationServiceProvider',
-            'path' => ['vendor/mrcore/foundation'],
-            'routes' => 'Http/routes.php',
-        ],
+        // Mrcore Packages
+        // ---------------------------------------------------------------------
+        #'Mrcore\Appstub'         => [],
+        'Mrcore\Auth'             => [],
+        'Mrcore\Foundation'       => ['type' => 'foundation'],
+        #'Mrcore\Parser'           => [],
+        #'Mrcore\Wiki'             => [],
 
-        'Auth' =>  [
-            'type' => 'module',
-            'namespace' => 'Mrcore\Auth',
-            'controller_namespace' => 'Mrcore\Auth\Http\Controllers',
-            'provider' => 'Mrcore\Auth\Providers\AuthServiceProvider',
-            'path' => ['vendor/mrcore/auth'],
-            'routes' => 'Http/routes.php',
-            'route_prefix' => null,
-            'views' => 'Views',
-            'view_prefix' => null,
-            'assets' => 'Assets',
-            'enabled' => false,
-        ],
-
-        'Wiki' => [
-            'type' => 'module',
-            'namespace' => 'Mrcore\Wiki',
-            'controller_namespace' => 'Mrcore\Wiki\Http\Controllers',
-            'provider' => 'Mrcore\Wiki\Providers\WikiServiceProvider',
-            'path' => ['vendor/mrcore/wiki'],
-            'routes' => 'Http/routes.php',
-            'route_prefix' => null,
-            'views' => 'Views',
-            'view_prefix' => null,
-            'assets' => 'Assets',
-            'enabled' => false,
-        ],
-
-        'Parser' => [
-            'type' => 'module',
-            'namespace' => 'Mrcore\Parser',
-            'provider' => 'Mrcore\Parser\Providers\ParserServiceProvider',
-            'path' => ['vendor/mrcore/parser'],
-            'enabled' => false,
-        ],
 
         // Bootswatch Themes
+        // ---------------------------------------------------------------------
         // default cerulean cosmo cyborg darkly flatly journal lumen paper
         // readable sandstone simplex slate spacelab superhero united yeti
-        'BaseTheme' => [
+        'Mrcore\Themes\Bootswatch' => [],
             'type' => 'basetheme',
             'namespace' => 'Mrcore\Themes\Bootswatch',
             'controller_namespace' => null,
             'provider' => 'Mrcore\Themes\Bootswatch\Providers\ThemeServiceProvider',
-            'path' => ['vendor/mrcore/bootswatch-theme'],
-            'routes' => null,
-            'route_prefix' => null,
-            'views' => 'Views',
-            'view_prefix' => null,
-            'assets' => 'Assets',
+            'path' => ['vendor/mrcore/bootswatch-theme']
             'css' => [
                 'css/bootstrap/simplex.min.css',
                 'css/bootstrap/override/theme-simplex.css',
@@ -94,68 +54,21 @@ return [
             'enabled' => false,
         ],
 
-        'SubTheme' => [
-            'type' => 'subtheme',
-            'namespace' => 'Mrcore\Themes\Example',
-            'controller_namespace' => null,
-            'provider' => 'Mrcore\Themes\Example\Providers\ThemeServiceProvider',
-            'path' => ['vendor/dynatron/example-theme'],
-            'routes' => null,
-            'route_prefix' => null,
-            'views' => 'Views',
-            'view_prefix' => null,
-            'assets' => 'Assets',
-            'css' => [
-                'css/bootstrap/slate.min.css',
-                #'css/bootstrap/override/example.css',
-                #'css/prism-light.css',
-            ],
-            'enabled' => false,
-        ],
+        #'Subtheme\Example' => [
+        #    'type' => 'subtheme',
+        #    'css' => [
+        #        'css/bootstrap/slate.min.css',
+        #    ],
+        #],
 
-        'Mreschke\Helpers' => [
-            'type' => 'module',
-            'namespace' => 'Mreschke\Helpers',
-            'path' => ['vendor/mreschke/helpers'],
-            'enabled' => false,
-        ],
-
-        /*'Mreschke\Dbal' => [
-            'type' => 'module',
-            'namespace' => 'Mreschke\Dbal',
-            'provider' => 'Mreschke\Dbal\Providers\DbalServiceProvider',
-            'path' => ['vendor/mreschke/dbal'],
-            'console_only' => false,
-            'enabled' => false,
-        ],
-
-        'Mreschke\Repository' => [
-            'type' => 'module',
-            'namespace' => 'Mreschke\Repository',
-            'path' => ['vendor/mreschke/repository'],
-        ],
-
-        'Mrcore\Mrcore4Legacy' => [
-            'type' => 'module',
-            'namespace' => 'Mrcore\Mrcore4Legacy',
-            'provider' => 'Mrcore\Mrcore4Legacy\Providers\Mrcore4LegacyServiceProvider',
-            'path' => ['vendor/mreschke/mrcore4-legacy'],
-        ],
-
-        'Mreschke\Keystone' => [
-            'type' => 'module',
-            'namespace' => 'Mreschke\Keystone',
-            'provider' => 'Mreschke\Keystone\Providers\KeystoneServiceProvider',
-            'path' => ['vendor/mreschke/keystone'],
-        ],
-
-        'Mreschke\Api' => [
-            'type' => 'module',
-            'namespace' => 'Mreschke\Api',
-            'provider' => 'Mreschke\Api\Providers\ApiServiceProvider',
-            'path' => ['vendor/mreschke/api'],
-        ],
-        */
+        // Mreschke Packages
+        // ---------------------------------------------------------------------
+        #'Mreschke\Api'           => [],
+        #'Mreschke\Dbal'           => [],
+        'Mreschke\Helpers'        => ['provider' => null],
+        #'Mreschke\Keystone'       => [],
+        #'Mreschke\Render'         => [],
+        #'Mreschke\Repository'     => [],
 
     ],
 
@@ -176,25 +89,26 @@ return [
 
     'assets' => [
         '%app%',
-        'SubTheme',
-        'Auth',
-        'Wiki',
-        'BaseTheme',
+        #'Subtheme\Example',
+        'Mrcore\Themes\Bootswatch',
+        'Mrcore\Auth',
+        'Mrcore\Wiki',
+
     ],
 
     'views' => [
         '%app%',
-        'SubTheme',
-        'Auth',
-        'Wiki',
-        'BaseTheme',
+        #'Subtheme\Example',
+        'Mrcore\Themes\Bootswatch',
+        'Mrcore\Auth',
+        'Mrcore\Wiki',
     ],
 
     'routes' => [
-        'Wiki',
+        'Mrcore\Wiki',
         '%app%',
-        'Auth',
-        'Foundation',
+        'Mrcore\Auth',
+        'Mrcore\Foundation',
     ],
 
     /*
