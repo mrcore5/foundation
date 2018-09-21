@@ -81,12 +81,7 @@ class AppMakeCommand extends Command
         if (str_contains($template, 'standalone')) {
             // This is a standalone appstub with /src/ folder
             $this->rename("$path/config/appstub.php", "$path/config/$package.php");
-        } elseif (str_contains($template, 'src')) {
-            // This is a mrcore5 module appstub with /src/ folder
-            $this->rename("$path/src/Providers/AppstubServiceProvider.php", "$path/src/Providers/".studly_case($package)."ServiceProvider.php");
-            $this->rename("$path/src/Http/Controllers/AppstubController.php", "$path/src/Http/".studly_case($package)."Controller.php");
-            $this->rename("$path/config/appstub.php", "$path/config/$package.php");
-        } else {
+        } elseif (str_contains($template, 'root')) {
             // This is a mrcore5 module appstub with everything in root folder
             $this->rename("$path/Providers/AppstubServiceProvider.php", "$path/Providers/".studly_case($package)."ServiceProvider.php");
             $this->rename("$path/Database/Seeds/AppstubSeeder.php", "$path/Database/Seeds/".studly_case($package)."Seeder.php");
@@ -94,6 +89,11 @@ class AppMakeCommand extends Command
             $this->rename("$path/Http/Controllers/AppstubController.php", "$path/Http/Controllers/".studly_case($package)."Controller.php");
             $this->rename("$path/Facades/Appstub.php", "$path/Facades/".studly_case($package).".php");
             $this->rename("$path/Config/appstub.php", "$path/Config/$package.php");
+        } else {
+            // This is a mrcore5 module appstub with /src/ folder
+            $this->rename("$path/src/Providers/AppstubServiceProvider.php", "$path/src/Providers/".studly_case($package)."ServiceProvider.php");
+            $this->rename("$path/src/Http/Controllers/AppstubController.php", "$path/src/Http/".studly_case($package)."Controller.php");
+            $this->rename("$path/config/appstub.php", "$path/config/$package.php");
         }
 
         // Composer update (no, we use componet path repo now, so no app composer needed)
