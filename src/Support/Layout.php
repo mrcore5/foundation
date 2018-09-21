@@ -1,6 +1,7 @@
 <?php namespace Mrcore\Foundation\Support;
 
 use View;
+use Module;
 
 class Layout
 {
@@ -206,8 +207,13 @@ class Layout
         return $this->getSet(__function__, $value);
     }
 
-    public function container($container = true, $headerContainer = true, $footerContainer = true)
+    public function container($container = true, $headerContainer = null, $footerContainer = null)
     {
+        // Get default container settings from users modules.php baseTheme containers array (or default if not found)
+        $defaultContainers = Module::themeContainers();
+        $headerContainer = isset($headerContainer) ? $headerContainer : $defaultContainers['header'];
+        $footerContainer = isset($footerContainer) ? $footerContainer : $defaultContainers['footer'];
+
         $container = ($container ? 'container' : 'container-fluid');
         $headerContainer = ($headerContainer ? 'container' : 'container-fluid');
         $footerContainer = ($footerContainer ? 'container' : 'container-fluid');

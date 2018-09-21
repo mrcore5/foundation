@@ -389,17 +389,19 @@ class Module
      */
     public function configureThemes()
     {
-        // Get theme module css and bootstrap container configurations
-        $baseThemeCss = $subThemeCss = null;
+        // Get theme modules css for both base and sub themes
         $modules = $this->all();
+        $baseThemeCss = $subThemeCss = null;
         foreach ($modules as $module) {
             if ($module['type'] == 'basetheme') {
                 $baseThemeCss = $module['css'];
-                $container = $module['container'];
             } elseif ($module['type'] == 'subtheme') {
                 $subThemeCss = $module['css'];
             }
         }
+
+        // Get theme container settings
+        $container = $this->themeContainers();
 
         // Add theme css
         $css = $baseThemeCss;
@@ -418,6 +420,29 @@ class Module
                 $container['body'], $container['header'], $container['footer']
             );
         }
+    }
+
+    /**
+     * Get the container booleans
+     * @return array
+     */
+    public function themeContainers()
+    {
+        // Get theme container settings if exists.  If not, set defaults
+        $baseThemeCss = $subThemeCss = null;
+        $modules = $this->all();
+        $container = [];
+        foreach ($modules as $module) {
+            if ($module['type'] == 'basetheme') {
+                $container = $module['container'];
+            }
+        }
+        $container = array_merge([
+            'header' => true,
+            'body' => true,
+            'footer' => true,
+        ], $container);
+        return $container;
     }
 
     /**
