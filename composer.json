@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "laravelcollective/html": "5.7"
+        "laravelcollective/html": "5.8"
     },
     "autoload": {
         "psr-4": {
