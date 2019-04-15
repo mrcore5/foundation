@@ -1,4 +1,4 @@
-# mRcore Foundation v5.7
+# mRcore Foundation v5.8
 
 `mrcore/foundation` is a module for the [mRcore Framework](https://github.com/mrcore5/framework)
 
