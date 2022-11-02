@@ -30,14 +30,26 @@ if (! function_exists('cnt')) {
      */
     function cnt($item)
     {
-        // PHP7.1 and below returns 0 on any number
+        // PHP 7.1 and below returns 0 on any number
+        // PHP 7.2 and above returns ERROR not implement Countable
         if (is_null($item)) return 0;
 
-        // PHP7.1 and below returns 1 on any number
+        // PHP 7.1 and below returns 1 on any number
+        // PHP 7.2 and above returns ERROR not implement Countable
         if (is_numeric($item)) return 1;
 
-        // PHP7.1 and below returns 1 on any string
+        // PHP 7.1 and below returns 1 on any string
+        // PHP 7.2 and above returns ERROR not implement Countable
         if (is_string($item)) return 1;
+
+        // This gets anything "countable" including laravel collections
+        if ($item instanceof Countable) return count($item);
+
+        // PHP7.1 and below returns 1 on any object like my repo entities
+        // Laravel collections are object, but we get that above with Countable
+        // This if for all other FLAT non-multiple objects like a single repo entity
+        // or instance of a class.  PHP 7.1 always returns 1 for non countables, we should to.
+        if (is_object($item)) return 1;
 
         try {
             // Use PHP's native count
