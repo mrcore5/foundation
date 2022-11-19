@@ -23,6 +23,7 @@ return [
     */
 
     'use_cache' => env('MRCORE_FOUNDATION_CACHE', true),
+    'cache_prefix' => env('MRCORE_FOUNDATION_CACHE_PREFIX', 'mrcore/cache'),
     'cache_expires' => env('MRCORE_FOUNDATION_CACHE_EXPIRES', 60),
 
     // If null, will disable any ?v= addition

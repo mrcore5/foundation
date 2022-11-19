@@ -30,9 +30,10 @@ class Cache
 
     private static function adjustKey($key)
     {
+        $keyPrefix = config('mrcore.foundation.cache_prefix');
         $key = str_replace("\\", "/", $key);
         $key = str_replace(' ', '_', $key);
-        $key = "mrcore/cache::$key";
+        $key = "$keyPrefix::$key";
         return $key;
     }
 }
