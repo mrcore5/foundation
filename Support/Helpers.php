@@ -45,6 +45,9 @@ if (! function_exists('cnt')) {
         // This gets anything "countable" including laravel collections
         if ($item instanceof Countable) return count($item);
 
+        // If you count($xml->SomeElement) and SomeElement does not exist cnt() gets 1 not 0, so use old count
+        if ($item instanceof \SimpleXMLElement) return count($item);
+
         // PHP7.1 and below returns 1 on any object like my repo entities
         // Laravel collections are object, but we get that above with Countable
         // This if for all other FLAT non-multiple objects like a single repo entity
