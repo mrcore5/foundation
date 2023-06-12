@@ -67,7 +67,7 @@ class AppMakeCommand extends Command
         exec("mkdir -p $path");
 
         // Git clone (and remove .git)
-        $gitUrl = "https://github.com/mreschke/mrcore-appstub";
+        $gitUrl = "https://github.com/mrcore5/appstub";
         $this->info("Git clone branch $template from $gitUrl into $path");
         $cmdStatus = exec("cd $path && git clone -b $template --depth 1 $gitUrl . && rm -rf .git && echo 0");
         if ($cmdStatus != "0") {
