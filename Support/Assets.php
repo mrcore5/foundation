@@ -13,6 +13,12 @@ class Assets
             $uri = substr($uri, 7); //ex: removes /assets so URL = /css/bootstrap.css
         }
 
+        // Detect ../ in path to prevent users from hoping outside our defined assets path
+        // Without this check users can do this http://mrcore.local/assets../.gitignore
+        if (stristr($uri, '../') !== false) {
+            $this->notFound();
+        }
+
         if (substr($uri, 0, 1) != '/') $uri = '/'.$uri;
         $segments = explode("/", $uri);
 
